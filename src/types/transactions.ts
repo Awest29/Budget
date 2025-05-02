@@ -23,4 +23,5 @@ export interface Transaction {
     created_at: string;
     updated_at: string;
     last_modified_by: string;
+    categorized_by: 'AI' | 'user';
 }

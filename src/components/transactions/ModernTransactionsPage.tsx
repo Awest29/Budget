@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { EnhancedFileUploadMaster } from './EnhancedFileUploadMaster';
 import { ModernTransactionList } from './ModernTransactionList';
 import { ModernAccountManagement } from './ModernAccountManagement';
 import { ModernFileList } from './ModernFileList';
 import { Filter } from 'lucide-react';
+import { SimpleExportButton } from './SimpleExportButton';
+import { TestLocalPatterns } from './TestLocalPatterns';
+import { supabase } from '../../lib/lib/supabase';
 
 // Type definitions
 type Month = 'January' | 'February' | 'March' | 'April' | 'May' | 'June' | 
@@ -32,6 +35,34 @@ export function ModernTransactionsPage({ year }: ModernTransactionsPageProps) {
   
   // State for refresh trigger
   const [refreshTrigger, setRefreshTrigger] = useState(0);
+
+  // State for storing categories for testing
+  const [categories, setCategories] = useState([]);
+
+  // Load categories for testing
+  useEffect(() => {
+    async function loadCategories() {
+      try {
+        const { data } = await supabase
+          .from('budget_categories')
+          .select(`
+            id,
+            name,
+            type,
+            sub_headers:budget_sub_headers(id, name)
+          `);
+          
+        if (data) {
+          console.log(`Loaded ${data.length} categories for pattern testing`);
+          setCategories(data);
+        }
+      } catch (error) {
+        console.error('Error loading categories for testing:', error);
+      }
+    }
+    
+    loadCategories();
+  }, []);
 
   // Function to trigger refresh after upload
   const handleUploadSuccess = () => {
@@ -112,6 +143,11 @@ export function ModernTransactionsPage({ year }: ModernTransactionsPageProps) {
         year={year} 
         onUploadSuccess={handleUploadSuccess}
       />
+      
+      {/* Debug Test Component - REMOVE IN PRODUCTION */}
+      {process.env.NODE_ENV !== 'production' && (
+        <TestLocalPatterns categories={categories} />
+      )}
       
       {/* Transactions List - Second */}
       <ModernTransactionList

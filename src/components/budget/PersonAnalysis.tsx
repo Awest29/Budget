@@ -5,10 +5,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ChevronDown, ChevronRight, Users, DollarSign, TrendingUp } from "lucide-react";
 import { supabase } from '@/lib/lib/supabase';
 import { FULL_MONTHS, convertBudgetAmount } from '@/types/budget';
-import { BudgetCharts } from './BudgetCharts';
 import { getBudgetData } from '@/lib/budgetService';
 import { ModernCollapsible } from '../ui/ModernCollapsible';
 import { cn } from '@/lib/utils';
+import { DirectReplacementCharts } from './DirectReplacementCharts';
 
 // Import required CSS
 import "@/components/budget/budget-table.css";
@@ -613,8 +613,8 @@ export function PersonAnalysis({ year }: PersonAnalysisProps) {
             defaultOpen={true}
             className="mt-6"
           >
-            <div className="p-4">
-              <BudgetCharts 
+            <div className="p-4" style={{ backgroundColor: 'white' }}>
+              <DirectReplacementCharts 
                 categories={categories}
                 transactions={transactions}
                 selectedMonth={selectedMonth}

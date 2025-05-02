@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { AlertCircle, FileText, Search, Filter } from 'lucide-react';
+import { AlertCircle, FileText, Search, Filter, DownloadCloud } from 'lucide-react';
 import './styles/enhanced-transactions.css'; // Import the enhanced styles
 import './styles/transaction-alternating-rows.css'; // Import alternating row styles
 import './styles/form-controls.css'; // Import form control styles
@@ -8,6 +8,9 @@ import './styles/black-text-override.css'; // Import black text override
 import './styles/hover-override.css'; // Import hover override
 import { supabase } from '../../lib/lib/supabase';
 import { storeCategorizationFeedback } from '../../lib/openai';
+import { SimpleExportButton } from './SimpleExportButton';
+import { categorizeTransaction } from '../../lib/categorization';
+import { findMatchingPattern } from '../../lib/categorization/transactionPatterns';
 
 interface Category {
   id: string;
@@ -31,6 +34,7 @@ interface Transaction {
   ai_confidence: number | null;
   owner: 'Alex' | 'Madde' | null;
   account_type: 'bank' | 'credit_card' | null;
+  last_modified_by?: string;
 }
 
 interface ModernTransactionListProps {
@@ -57,8 +61,13 @@ export function ModernTransactionList({
 
   // Load data when props change
   useEffect(() => {
-    loadTransactions();
-    loadCategories();
+    async function loadData() {
+      // First load categories
+      await loadCategories();
+      // Then load transactions (which need categories for categorization)
+      await loadTransactions();
+    }
+    loadData();
   }, [year, month, accountType, owner, refreshTrigger]);
 
   // Filter transactions when search query changes
@@ -84,12 +93,28 @@ export function ModernTransactionList({
       const lastDay = new Date(year, monthIndex + 1, 0).getDate();
       const endDate = `${year}-${String(monthIndex + 1).padStart(2, '0')}-${String(lastDay).padStart(2, '0')}`;
 
-      // Build query
+      // Build query - explicitly select all fields including last_modified_by
       let query = supabase
         .from('transactions')
-        .select()
+        .select(`
+          id,
+          transaction_date,
+          description,
+          amount,
+          category_id,
+          sub_header_id,
+          categorized_by,
+          ai_confidence,
+          original_category,
+          owner,
+          account_type,
+          last_modified_by,
+          budget_categories(name),
+          budget_sub_headers(name)
+        `)
         .gte('transaction_date', startDate)
         .lte('transaction_date', endDate);
+
 
       // Apply filters
       if (owner !== 'all') {
@@ -108,6 +133,98 @@ export function ModernTransactionList({
 
       // Process data and update state
       const uniqueTransactions = removeDuplicates(data || []);
+      
+      // Debug output to check transaction data
+      console.log('Transactions from database:');
+      uniqueTransactions.slice(0, 3).forEach(tx => {
+        console.log(`ID: ${tx.id}, Desc: ${tx.description}, categorized_by: ${tx.categorized_by}, last_modified_by: ${tx.last_modified_by}`);
+      });
+      
+      // Normalize last_modified_by values if they're set to owner names
+      uniqueTransactions.forEach(tx => {
+        // Check if this would match a local pattern (for all transactions)
+        const wouldMatchLocalPattern = findMatchingPattern(tx.description);
+        
+        if (wouldMatchLocalPattern) {
+          console.log(`Transaction "${tx.description}" matches local pattern "${wouldMatchLocalPattern.pattern}", current: categorized_by=${tx.categorized_by}, last_modified_by=${tx.last_modified_by}`);
+        }
+        
+        // If last_modified_by is an owner name or undefined, replace it
+        if (tx.last_modified_by === 'Alex' || tx.last_modified_by === 'Madde' || !tx.last_modified_by) {
+          console.log(`Normalizing last_modified_by for ${tx.id} from "${tx.last_modified_by || 'undefined'}" to "${tx.categorized_by === 'AI' ? 'api' : 'user_manual'}"`);  
+          tx.last_modified_by = tx.categorized_by === 'AI' ? 'api' : 'user_manual';
+        }
+        
+        // If this transaction would match a local pattern but is marked as API, update it
+        if (wouldMatchLocalPattern && tx.categorized_by === 'AI' && tx.last_modified_by === 'api') {
+          console.log(`Updating ${tx.id} to use local pattern match "${wouldMatchLocalPattern.pattern}" instead of API`);
+          // Update UI state only (not database) since this is just visualization
+          tx.last_modified_by = 'local_pattern';
+        }
+      });
+      
+      // Apply local categorization to uncategorized transactions
+      const uncategorizedTransactions = uniqueTransactions.filter(
+        t => !t.category_id || !t.sub_header_id
+      );
+      
+      if (uncategorizedTransactions.length > 0 && categories.length > 0) {
+        console.log(`Attempting to categorize ${uncategorizedTransactions.length} transactions with ${categories.length} available categories`);
+        
+        // Process transactions in batches to avoid UI freezing
+        const batchSize = 5;
+        for (let i = 0; i < uncategorizedTransactions.length; i += batchSize) {
+          const batch = uncategorizedTransactions.slice(i, i + batchSize);
+          
+          await Promise.all(batch.map(async (transaction) => {
+            try {
+              // Try to categorize locally first, then fallback to API
+              const result = await categorizeTransaction(
+                transaction.description,
+                transaction.amount,
+                categories
+              );
+              
+              // Only update if we found a category
+              if (result.categoryId && result.subHeaderId) {
+                // Update transaction in the database
+                console.log(`Updating database for ${transaction.id} with method=${result.method}`);
+                const { error: updateError } = await supabase
+                  .from('transactions')
+                  .update({
+                    category_id: result.categoryId,
+                    sub_header_id: result.subHeaderId,
+                    ai_confidence: result.confidence,
+                    categorized_by: 'AI', // Keep as AI for UI consistency
+                    last_modified_by: result.method // Record actual method used
+                  })
+                  .eq('id', transaction.id);
+                
+                if (updateError) {
+                  console.error('Error updating transaction:', updateError);
+                } else {
+                  // Update local state
+                  transaction.category_id = result.categoryId;
+                  transaction.sub_header_id = result.subHeaderId;
+                  transaction.ai_confidence = result.confidence;
+                  transaction.categorized_by = 'AI';
+                  transaction.last_modified_by = result.method;
+                  console.log(`✅ Transaction ${transaction.id} updated with ${result.method}: ${transaction.description}`);
+                  console.log(`   last_modified_by set to: ${transaction.last_modified_by}`);
+                }
+              }
+            } catch (error) {
+              console.error('Error categorizing transaction:', error);
+            }
+          }));
+          
+          // Small delay between batches to let UI breathe
+          if (i + batchSize < uncategorizedTransactions.length) {
+            await new Promise(resolve => setTimeout(resolve, 100));
+          }
+        }
+      }
+      
       setTransactions(uniqueTransactions);
     } catch (error) {
       console.error('Error loading transactions:', error);
@@ -129,6 +246,15 @@ export function ModernTransactionList({
         `);
       
       if (error) throw error;
+      
+      console.log(`Loaded ${data?.length || 0} categories`);
+      // Check if the first few have sub_headers properly loaded
+      if (data && data.length > 0) {
+        for (let i = 0; i < Math.min(data.length, 2); i++) {
+          console.log(`Category ${i}: ${data[i].name}, ${data[i].sub_headers?.length || 0} sub-headers`);
+        }
+      }
+      
       setCategories(data || []);
     } catch (error) {
       console.error('Error loading categories:', error);
@@ -210,7 +336,8 @@ export function ModernTransactionList({
                 ...t, 
                 category_id: categoryId, 
                 sub_header_id: subHeaderId,
-                categorized_by: 'user'
+                categorized_by: 'user',
+                last_modified_by: 'user_manual'
               }
             : t
         )
@@ -222,7 +349,7 @@ export function ModernTransactionList({
         .update({ 
           category_id: categoryId,
           sub_header_id: subHeaderId,
-          last_modified_by: 'user',
+          last_modified_by: 'user_manual', // Explicitly set to user_manual
           categorized_by: 'user'
         })
         .eq('id', transaction.id);
@@ -284,7 +411,10 @@ export function ModernTransactionList({
             </p>
           </div>
           
-          <div className="relative">
+          <div className="flex items-center gap-3">
+            <SimpleExportButton year={year} month={month} />
+            
+            <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-tertiary" size={16} />
             <input
               type="text"
@@ -299,8 +429,9 @@ export function ModernTransactionList({
                 borderRadius: "8px",
                 padding: "0.65rem 1rem 0.65rem 2.5rem",
                 boxShadow: "0 1px 3px rgba(0, 0, 0, 0.05)"
-              }}
-            />
+              }}            
+              />
+                </div>
           </div>
         </div>
       </div>
@@ -334,7 +465,7 @@ export function ModernTransactionList({
                     <th className="py-3">Category</th>
                     <th className="py-3">Sub-Category</th>
                     <th className="py-3">Owner</th>
-                    <th className="py-3">Source</th>
+                    <th className="py-3">Categorization</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -385,12 +516,49 @@ export function ModernTransactionList({
                         {transaction.owner || '-'}
                       </td>
                       <td>
-                        <span className={`badge ${transaction.categorized_by === 'AI' ? 'badge-secondary' : 'badge-outline'}`}>
-                          {transaction.categorized_by}
-                          {transaction.categorized_by === 'AI' && transaction.ai_confidence && 
-                            ` (${Math.round(transaction.ai_confidence * 100)}%)`
+                        {(() => {
+                          // First check if this would match a local pattern, regardless of how it was categorized
+                          const wouldMatchLocalPattern = findMatchingPattern(transaction.description);
+                          const isUserCategorized = transaction.categorized_by === 'user';
+                          const isLocalPatternMethod = transaction.last_modified_by === 'local_pattern';
+                          
+                          // For debugging
+                          const matchInfo = wouldMatchLocalPattern 
+                            ? `(would match ${wouldMatchLocalPattern.pattern})` 
+                            : '';
+                            
+                          if (isUserCategorized) {
+                            return (
+                              <span className="badge badge-outline">Manual</span>
+                            );
+                          } else if (isLocalPatternMethod) {
+                            return (
+                              <span className="badge badge-success">Local</span>
+                            );
+                          } else if (wouldMatchLocalPattern) {
+                            // This SHOULD have been matched locally but wasn't for some reason
+                            return (
+                              <span className="badge badge-warning">API {matchInfo}</span>
+                            );
+                          } else {
+                            return (
+                              <span className="badge badge-secondary">
+                                API {transaction.ai_confidence && 
+                                  `(${Math.round(transaction.ai_confidence * 100)}%)`
+                                }
+                              </span>
+                            );
                           }
-                        </span>
+                        })()} 
+                        {/* Debug info, remove in production */}
+                        {process.env.NODE_ENV !== 'production' && (
+                          <span className="text-xs text-gray-400 block mt-1">
+                            Method: {transaction.last_modified_by || 'unknown'}<br/>
+                            {findMatchingPattern(transaction.description) 
+                              ? `Would match: ${findMatchingPattern(transaction.description)?.pattern}` 
+                              : 'No local match'}
+                          </span>
+                        )}
                       </td>
                     </tr>
                   ))}

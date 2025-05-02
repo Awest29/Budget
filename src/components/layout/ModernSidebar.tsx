@@ -1,5 +1,7 @@
 import React from 'react';
 import { BarChart, DollarSign, FileText, PieChart, Upload, LogOut, Clock } from 'lucide-react';
+import { supabase } from '@/lib/lib/supabase';
+import { useToast } from '@/hooks/use-toast';
 
 type ViewType = 'budget' | 'transactions-2025' | 'analysis-2025' | 'person-analysis-2025';
 
@@ -9,6 +11,26 @@ interface SidebarProps {
 }
 
 export function Sidebar({ currentView, onViewChange }: SidebarProps) {
+  const { toast } = useToast();
+
+  const handleLogout = async () => {
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      
+      toast({
+        title: "Logged out successfully",
+        description: "See you next time!",
+      });
+    } catch (error) {
+      console.error('Error logging out:', error);
+      toast({
+        title: "Error logging out",
+        description: "Please try again",
+        variant: "destructive",
+      });
+    }
+  };
   const menuItems = [
     { id: 'budget', label: 'Budget 2025', icon: <BarChart size={20} /> },
     { id: 'transactions-2025', label: 'Transactions', icon: <DollarSign size={20} /> },
@@ -42,7 +64,7 @@ export function Sidebar({ currentView, onViewChange }: SidebarProps) {
       </nav>
       
       <div className="sidebar-footer">
-        <button className="sidebar-footer-button">
+        <button className="sidebar-footer-button" onClick={handleLogout}>
           <LogOut size={20} />
           <span>Logout</span>
         </button>

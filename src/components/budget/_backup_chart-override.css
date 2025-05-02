@@ -1,0 +1,188 @@
+/* Emergency CSS overrides with !important for chart backgrounds */
+
+/* Target every possible chart container with high specificity */
+html body [class*="ModernCollapsible"] div[class*="CollapsibleContent"] > div,
+html body [class*="ModernCollapsible"] div[class*="CollapsibleContent"] > div > div,
+html body [class*="ModernCollapsible"] div[class*="CollapsibleContent"] > div > div > div,
+html body [class*="ModernCollapsible"] div[class*="CollapsibleContent"] > div > div > div > div,
+html body [class*="ModernCollapsible"] div[class*="CollapsibleContent"] > div > div > div > div > div,
+html body [class*="ModernCollapsible"] div[class*="CollapsibleContent"] > div > div > div > div > div > div,
+html body [class*="ModernCollapsible"] div[class*="CollapsibleContent"] > div > div > div > div > div > div > div,
+html body [class*="ModernCollapsible"] div[class*="CollapsibleContent"] > div > div > div > div > div > div > div > div,
+html body [class*="ModernCollapsible"] div[class*="CollapsibleContent"] > div > div > div > div > div > div > div > div > div {
+  background-color: white !important;
+  background: white !important;
+  color: #334155 !important;
+}
+
+/* Target the direct chart containers */
+html body [class*="ModernCollapsible"] [class*="budget-charts-container"],
+html body [class*="ModernCollapsible"] [class*="budget-charts-container"] > *,
+html body [class*="ModernCollapsible"] [class*="budget-charts-container"] > * > *,
+html body [class*="ModernCollapsible"] [class*="budget-charts-container"] > * > * > *,
+html body [class*="ModernCollapsible"] [class*="budget-charts-container"] > * > * > * > * {
+  background-color: white !important;
+  background: white !important;
+}
+
+/* Target the chart wrappers with extreme specificity */
+html body .recharts-wrapper,
+html body .recharts-responsive-container,
+html body .recharts-wrapper > *,
+html body .recharts-responsive-container > *,
+html body .recharts-surface,
+html body .recharts-surface > * {
+  background-color: white !important;
+  background: white !important;
+}
+
+/* Target specific chart backgrounds */
+html body .recharts-surface .recharts-rectangle {
+  fill: white !important;
+}
+
+/* Target the pie chart background */
+html body .recharts-surface .recharts-layer.recharts-polar-angle-axis,
+html body .recharts-surface .recharts-polar-grid,
+html body .recharts-surface .recharts-polar-radius-axis {
+  fill: white !important;
+}
+
+/* Target card backgrounds */
+html body [class*="card"],
+html body [class*="Card"],
+html body [class*="card"] > *,
+html body [class*="Card"] > *,
+html body [class*="card"] > * > *,
+html body [class*="Card"] > * > *,
+html body [class*="card"] > * > * > *,
+html body [class*="Card"] > * > * > * {
+  background-color: white !important;
+  background: white !important;
+}
+
+/* Target card headers */
+html body [class*="CardHeader"],
+html body [class*="card-header"],
+html body [class*="CardHeader"] > *,
+html body [class*="card-header"] > * {
+  background-color: white !important;
+  color: #334155 !important;
+}
+
+/* Target card content */
+html body [class*="CardContent"],
+html body [class*="card-content"],
+html body [class*="CardContent"] > *,
+html body [class*="card-content"] > * {
+  background-color: white !important;
+}
+
+/* Target all elements with styled backgrounds */
+[style*="background-color:"],
+[style*="background-color:"] > *,
+[style*="background-color:"] > * > *,
+[style*="background:"],
+[style*="background:"] > *,
+[style*="background:"] > * > * {
+  background-color: white !important;
+  background: white !important;
+}
+
+/* Target specific chart containers by their position */
+body div:nth-of-type(n) > div:nth-of-type(n) > div[class*="ModernCollapsible"] > div:nth-of-type(2) > div,
+body div:nth-of-type(n) > div:nth-of-type(n) > div[class*="ModernCollapsible"] > div:nth-of-type(2) > div > div,
+body div:nth-of-type(n) > div:nth-of-type(n) > div[class*="ModernCollapsible"] > div:nth-of-type(2) > div > div > div {
+  background-color: white !important;
+  background: white !important;
+}
+
+/* Target top-level elements that might contain the chart container */
+body > div,
+body > div > div,
+body > div > div > div,
+body > div > div > div > div,
+body > div > div > div > div > div {
+  background-color: white !important;
+}
+
+/* Target specific chart elements */
+.recharts-surface,
+.recharts-default-tooltip,
+.recharts-tooltip-wrapper,
+.recharts-tooltip-wrapper *,
+.recharts-default-tooltip * {
+  background-color: white !important; 
+  fill: white !important;
+}
+
+/* Target SVG elements */
+svg,
+svg rect,
+svg[class*="recharts"],
+svg[class*="recharts"] > rect,
+svg[class*="recharts"] > .recharts-surface,
+svg[class*="recharts"] > .recharts-surface > rect {
+  fill: white !important;
+}
+
+/* Override specifically graph backgrounds */
+.recharts-cartesian-grid-bg {
+  fill: white !important;
+}
+
+/* Override any inline styles with !important */
+[style*="background: rgb(51, 65, 85)"],
+[style*="background: rgb(51, 65, 85)"] *,
+[style*="background: #334155"],
+[style*="background: #334155"] *,
+[style*="background:#334155"],
+[style*="background:#334155"] * {
+  background: white !important;
+  background-color: white !important;
+}
+
+/* Direct override for SVG elements */
+svg[width][height][viewBox] > rect[width][height][x="0"][y="0"] {
+  fill: white !important;
+}
+
+/* Make chart titles visible */
+.recharts-default-legend {
+  background-color: transparent !important;
+}
+
+/* Extreme specificity override for chart background */
+body [style*="background"][style*="rgb(51, 65, 85)"],
+body [style*="background-color"][style*="rgb(51, 65, 85)"],
+body [style*="background"][style*="#334155"],
+body [style*="background-color"][style*="#334155"] {
+  background: white !important;
+  background-color: white !important;
+}
+
+/* Direct style attribute override for SVG background */
+svg[style*="background"],
+svg[style*="background"] * {
+  background: white !important;
+  background-color: white !important;
+}
+
+/* Target any element with inline style containing background */
+[style*="background"] {
+  background: white !important;
+  background-color: white !important;
+}
+
+/* Main collapsible panels */
+[class*="CollapsibleContent"] > div {
+  background-color: white !important;
+}
+
+/* Chart titles with dark backgrounds */
+[style*="background"] > div > h3,
+[style*="background"] > h3,
+[style*="background"] div[class*="title"],
+[style*="background"] [class*="Title"] {
+  color: #334155 !important;
+}

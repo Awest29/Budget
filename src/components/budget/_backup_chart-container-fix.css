@@ -1,0 +1,70 @@
+/* Direct targeting of chart container elements with !important */
+
+/* Target the outer card in the screenshot with the dark blue background */
+.Variable-Expenses-Comparison,
+.Top-Variable-Expense-Categories,
+div:has(> h3:contains("Variable Expenses Comparison")),
+div:has(> h3:contains("Top Variable Expense Categories")),
+div:has(.recharts-wrapper),
+div:has(.recharts-surface) {
+  background-color: white !important;
+  background: white !important;
+  color: #334155 !important;
+}
+
+/* Target by parent-child relationship */
+[class*="Collapsible"] div,
+[class*="CollapsibleContent"] div,
+.collapsible div,
+.collapsible-content div {
+  background-color: white !important;
+  background: white !important;
+}
+
+/* Target all chart containers by path structure */
+#root > div > div > div > div > div > div {
+  background-color: white !important;
+  background: white !important;
+}
+
+/* Target by attribute */
+[class],
+[style],
+[class][style] {
+  background-color: white !important;
+  background: white !important;
+}
+
+/* Target specifically the chart panels */
+[style*="background-color: rgb(51, 65, 85)"],
+[style*="background-color:#334155"],
+[style*="background: rgb(51, 65, 85)"],
+[style*="background:#334155"] {
+  background-color: white !important;
+  background: white !important;
+}
+
+/* Target any SVG parent */
+div:has(> svg),
+div:has(> div > svg),
+div:has(.recharts-wrapper),
+div:has(.recharts-surface) {
+  background-color: white !important;
+  background: white !important;
+}
+
+/* Target specific container based on our screenshot analysis */
+.p-4.budget-charts-container + div,
+.p-4.budget-charts-container > div,
+.p-4.budget-charts-container > div > div,
+.p-4.budget-charts-container > div > div > div {
+  background-color: white !important;
+  background: white !important;
+}
+
+/* Target with even more specificity */
+body .p-4.budget-charts-container > div:nth-child(1),
+body .p-4.budget-charts-container > div:nth-child(2) {
+  background-color: white !important;
+  background: white !important;
+}

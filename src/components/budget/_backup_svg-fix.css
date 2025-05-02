@@ -1,0 +1,76 @@
+/* SVG-specific fixes for chart backgrounds */
+
+/* Target SVG elements and their backgrounds */
+svg {
+  background-color: white !important;
+}
+
+/* Target the background rectangle of SVG */
+svg rect:first-child {
+  fill: white !important;
+}
+
+/* Target SVG elements within the budget charts container */
+.budget-charts-container svg,
+.budget-charts-container svg *,
+[class*="ModernCollapsible"] svg,
+[class*="ModernCollapsible"] svg * {
+  background-color: white !important;
+}
+
+/* Target all rectangles in chart SVGs */
+.recharts-layer rect {
+  fill: white !important;
+}
+
+/* Override background of the entire chart grid */
+.recharts-cartesian-grid-bg,
+.recharts-polar-grid-bg {
+  fill: white !important;
+}
+
+/* Fix for chart backgrounds with extremely high specificity */
+body div div div svg,
+body div div div div svg,
+body div div div div div svg,
+body div div div div div div svg {
+  background-color: white !important;
+}
+
+body div div div svg rect,
+body div div div div svg rect,
+body div div div div div svg rect,
+body div div div div div div svg rect {
+  fill: white !important;
+}
+
+/* Override the background color of chart SVGs */
+svg.recharts-surface {
+  background-color: white !important;
+}
+
+/* Override any SVG with a width and height (likely charts) */
+svg[width][height] {
+  background-color: white !important;
+}
+
+/* Target any element with viewBox attribute (SVGs) */
+[viewBox] {
+  background-color: white !important;
+}
+
+/* Extremely specific selector for chart background rectangles */
+svg[class*="recharts"] > rect:first-of-type,
+svg > rect:first-of-type,
+svg rect[width="100%"][height="100%"],
+svg rect[x="0"][y="0"] {
+  fill: white !important;
+}
+
+/* Make sure text is visible on white backgrounds */
+.recharts-text,
+.recharts-cartesian-axis-tick-value,
+.recharts-legend-item-text {
+  fill: #334155 !important;
+  color: #334155 !important;
+}

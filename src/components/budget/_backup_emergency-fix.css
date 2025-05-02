@@ -1,0 +1,142 @@
+/* Emergency fix specifically for the chart cards with dark backgrounds */
+
+/* Target the outer card container that appears in the screenshot */
+[style*="background: rgb(51, 65, 85)"],
+[style*="background: #334155"],
+[style*="background-color: rgb(51, 65, 85)"],
+[style*="background-color: #334155"],
+div[style*="background: rgb(51, 65, 85)"],
+div[style*="background: #334155"],
+div[style*="background-color: rgb(51, 65, 85)"],
+div[style*="background-color: #334155"],
+.budget-charts-container > div,
+.WhiteBackgroundCollapsible-content > div,
+.collapsible-content > div,
+/* Target any div that has a title "Variable Expenses Comparison" or "Top Variable Expense Categories" */
+div:has(h2),
+div:has(h3),
+div:has(p),
+div:has(.recharts-wrapper),
+/* Really aggressive catch-all selectors */
+body div div div,
+body div div div div,
+body div div div div div {
+  background-color: white !important;
+  background: white !important;
+  color: #334155 !important;
+}
+
+/* Specifically target the cards holding the charts */
+div[class*="card"],
+div[class*="Card"],
+.card,
+.Card,
+[class*="card"],
+[class*="Card"] {
+  background-color: white !important;
+  background: white !important;
+}
+
+/* Directly target the specific divs seen in the screenshot */
+div:has(> h3:contains("Variable Expenses Comparison")),
+div:has(> h3:contains("Top Variable Expense Categories")),
+div:has(.recharts-wrapper),
+div:has(.recharts-responsive-container) {
+  background-color: white !important;
+  background: white !important;
+}
+
+/* Target any container immediately above a chart */
+div > .recharts-wrapper,
+div > .recharts-responsive-container,
+div > div > .recharts-wrapper,
+div > div > .recharts-responsive-container {
+  background-color: white !important;
+  background: white !important;
+}
+
+/* Even more aggressive selector: target anything that contains Variable Expenses in text */
+div:has(text:contains("Variable Expenses")),
+div:has(text:contains("Top Variable")),
+div:contains("Variable Expenses"),
+div:contains("Top Variable") {
+  background-color: white !important;
+  background: white !important;
+}
+
+/* Target the specific parent elements by their structure position */
+.budget-charts-container > div:nth-child(n),
+.p-4 > div:nth-child(n),
+.space-y-8 > div:nth-child(n) {
+  background-color: white !important;
+  background: white !important;
+}
+
+/* Directly override any inline styles - extremely aggressive approach */
+[style*="background"]:not(svg):not(path):not(rect):not(circle):not(line) {
+  background-color: white !important;
+  background: white !important;
+}
+
+/* Target anything with a recharts class */
+[class*="recharts"]:not(svg):not(path):not(rect):not(circle):not(line),
+.recharts-wrapper,
+.recharts-responsive-container,
+.recharts-wrapper > *,
+.recharts-responsive-container > * {
+  background-color: white !important;
+  background: white !important;
+}
+
+/* Apply to any container with a heading that contains our chart titles */
+div:has(h3:contains("Comparison")),
+div:has(h3:contains("Categories")) {
+  background-color: white !important;
+  background: white !important;
+}
+
+/* Override any card content */
+.card-content,
+.card-header,
+.CardContent,
+.CardHeader,
+[class*="card-content"],
+[class*="card-header"],
+[class*="CardContent"],
+[class*="CardHeader"] {
+  background-color: white !important;
+  background: white !important;
+}
+
+/* Apply specifically to chart titles */
+h3, .title, .chart-title {
+  color: #334155 !important;
+}
+
+/* Target specifically the containers with the chart titles visible in screenshot */
+div:has(> :contains("Variable Expenses Comparison")),
+div:has(> :contains("Top Variable Expense Categories")) {
+  background-color: white !important;
+  background: white !important;
+  border-radius: 8px !important;
+}
+
+/* Target card in collapsible */
+.collapsible div.card,
+.collapsible div[class*="card"],
+.collapsible-content div.card,
+.collapsible-content div[class*="card"] {
+  background-color: white !important;
+  background: white !important;
+}
+
+/* Target the direct children of the budget-charts-container */
+.budget-charts-container > div {
+  background-color: white !important;
+  background: white !important;
+  color: #334155 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+  border: 1px solid #e2e8f0 !important;
+  overflow: hidden !important;
+}

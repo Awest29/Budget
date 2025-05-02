@@ -14,86 +14,79 @@ import {
   Cell
 } from 'recharts';
 
+// Types for props
 interface ChartProps {
   categories: Category[];
   transactions: Transaction[];
   selectedMonth: string;
 }
 
-// Add missing interfaces
+// Interface definitions
 interface SubHeader {
-    id: string;
-    name: string;
-    Alex: number;
-    Madde: number;
-    transactions?: Transaction[];
-  }
+  id: string;
+  name: string;
+  Alex: number;
+  Madde: number;
+  transactions?: Transaction[];
+}
   
-  interface Category {
-    id: string;
-    name: string;
-    type: 'income' | 'fixed' | 'variable' | 'extraordinary';
-    subHeaders: SubHeader[];
-    totalAlex: number;
-    totalMadde: number;
-  }
+interface Category {
+  id: string;
+  name: string;
+  type: 'income' | 'fixed' | 'variable' | 'extraordinary';
+  subHeaders: SubHeader[];
+  totalAlex: number;
+  totalMadde: number;
+}
   
-  interface Transaction {
-    id: string;
-    transaction_date: string;
-    description: string;
-    amount: number;
-    category_id: string | null;
-    sub_header_id: string | null;
-    account_type: string;
-    owner: string;
-  }
-  
-  interface ChartProps {
-    categories: Category[];
-    transactions: Transaction[];
-    selectedMonth: string;
+interface Transaction {
+  id: string;
+  transaction_date: string;
+  description: string;
+  amount: number;
+  category_id: string | null;
+  sub_header_id: string | null;
+  account_type: string;
+  owner: string;
+}
+
+export function BudgetCharts({ categories, transactions, selectedMonth }: ChartProps) {
+  // Check if there's any data
+  if (!categories || categories.length === 0) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>No data available for {selectedMonth}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p>Please select a different month or ensure data is loaded.</p>
+        </CardContent>
+      </Card>
+    );
   }
 
-  export function BudgetCharts({ categories, transactions, selectedMonth }: ChartProps) {
-    // Check if there's any data
-    if (!categories || categories.length === 0) {
-      return (
-        <Card>
-          <CardHeader>
-            <CardTitle>No data available for {selectedMonth}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p>Please select a different month or ensure data is loaded.</p>
-          </CardContent>
-        </Card>
-      );
-    }
-  
-    // Prepare data for Variable Expenses Comparison
-    const variableExpensesData = categories
-      .filter(cat => cat.type === 'variable' && (cat.totalAlex !== 0 || cat.totalMadde !== 0))
-      .map(category => ({
-        name: category.name,
-        Alex: Math.abs(category.totalAlex),
-        Madde: Math.abs(category.totalMadde),
-      }));
-  
-    // Only render if we have data
-    if (variableExpensesData.length === 0) {
-      return (
-        <Card>
-          <CardHeader>
-            <CardTitle>No variable expenses for {selectedMonth}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p>No variable expenses recorded for this period.</p>
-          </CardContent>
-        </Card>
-      );
-    }
-  
-    // Rest of your chart code...
+  // Prepare data for Variable Expenses Comparison
+  const variableExpensesData = categories
+    .filter(cat => cat.type === 'variable' && (cat.totalAlex !== 0 || cat.totalMadde !== 0))
+    .map(category => ({
+      name: category.name,
+      Alex: Math.abs(category.totalAlex),
+      Madde: Math.abs(category.totalMadde),
+    }));
+
+  // Only render if we have data
+  if (variableExpensesData.length === 0) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>No variable expenses for {selectedMonth}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p>No variable expenses recorded for this period.</p>
+        </CardContent>
+      </Card>
+    );
+  }
 
   // Prepare data for Top Spending Categories Pie Chart
   const totalSpendingByCategory = categories
@@ -108,12 +101,12 @@ interface SubHeader {
   // Colors for the pie chart
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8'];
 
-// Fix type errors in formatters and labels
-const renderCustomLabel = ({ name, percent }: { name: string; percent: number }) => {
+  // Formatter for labels and tooltips
+  const renderCustomLabel = ({ name, percent }) => {
     return `${name} (${(percent * 100).toFixed(0)}%)`;
   };
   
-  const customTooltipFormatter = (value: number) => value.toLocaleString('en-US');
+  const customTooltipFormatter = (value) => value.toLocaleString('en-US');
 
   return (
     <div className="space-y-8">
