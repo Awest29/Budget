@@ -1,0 +1,69 @@
+/* Additional overrides for person analysis component */
+
+/* Override the category-row background to be light gray instead of blue */
+.person-analysis-container .category-row,
+.person-analysis-container .category-row td {
+  background-color: #f1f5f9 !important; /* Light gray instead of blue */
+  color: #000000 !important;
+}
+
+.person-analysis-container .category-row:hover,
+.person-analysis-container .category-row:hover td {
+  background-color: #f8fafc !important; /* Lighter gray on hover */
+}
+
+/* Fix selector focus and active styles to remove blue focus ring */
+.person-analysis-container [class*="SelectTrigger"],
+.person-analysis-container .select-trigger,
+.person-analysis-container [role="combobox"] {
+  border-color: #e2e8f0 !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.person-analysis-container [class*="SelectTrigger"]:focus,
+.person-analysis-container .select-trigger:focus,
+.person-analysis-container [data-state="open"] .select-trigger,
+.person-analysis-container [role="combobox"]:focus {
+  border-color: #e2e8f0 !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+/* Override subcategory styling */
+.person-analysis-container .subcategory-row,
+.person-analysis-container .subcategory-row td {
+  background-color: #f8fafc !important; /* Very light background */
+}
+
+.person-analysis-container .subcategory-row:hover,
+.person-analysis-container .subcategory-row:hover td {
+  background-color: #f9fafb !important; /* Subtle hover effect */
+}
+
+/* Make all text black for better contrast */
+.person-analysis-container .category-name,
+.person-analysis-container th,
+.person-analysis-container td {
+  color: #000000 !important;
+}
+
+/* Override any select component styling */
+.person-analysis-container select,
+.person-analysis-container [role="combobox"],
+.person-analysis-container .form-control {
+  background-color: white !important;
+  border-color: #e2e8f0 !important;
+  color: #334155 !important;
+  box-shadow: none !important;
+}
+
+/* Override any blue highlighting from selection */
+.person-analysis-container ::selection {
+  background-color: rgba(226, 232, 240, 0.3) !important;
+}
+
+/* Fix for select dropdown items */
+[data-radix-popper-content-wrapper] [role="option"]:hover {
+  background-color: #f1f5f9 !important;
+}

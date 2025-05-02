@@ -1,0 +1,505 @@
+import React, { useState, useEffect } from 'react';
+import { Upload, File, X, AlertCircle, CheckCircle } from 'lucide-react';
+import { FULL_MONTHS, Month, BudgetCategory } from '../../types/budget';
+import { supabase } from '../../lib/lib/supabase';
+import { createTransactionFile, processTransactionFile } from '../../lib/lib/transactions';
+import { suggestTransactionCategory } from '../../lib/openai';
+import { useToast } from "@/hooks/use-toast";
+
+// Import ModernFileUpload styling
+import './styles/enhanced-transactions.css';
+import './styles/form-controls.css';
+import './styles/card-headings.css';
+
+interface EnhancedFileUploadMasterProps {
+  year: number;
+  onUploadSuccess: () => void;
+}
+
+interface AccountMapping {
+  id: string;
+  account_name: string;
+  account_type: 'bank' | 'credit_card';
+  owner: 'Alex' | 'Madde';
+}
+
+// Process configurations - optimized for performance
+const BATCH_SIZE = 15; // Increased from 5 to process more transactions per batch
+const BATCH_DELAY = 600; // Reduced from 2000ms to 600ms to decrease waiting time
+const TRANSACTION_DELAY = 50; // Reduced from 200ms to 50ms for faster processing
+
+// Helper delay function
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+// AI Processing functions from FileUploadMaster.tsx
+async function processTransaction(
+  transaction: any,
+  categories: BudgetCategory[],
+  selectedMapping: AccountMapping,
+  toast: any
+): Promise<boolean> {
+  let retries = 3;
+  
+  // Add more detailed logging at start
+  console.log('Starting transaction processing:', {
+    id: transaction.id,
+    description: transaction.description,
+    amount: transaction.amount
+  });
+  
+  while (retries > 0) {
+    try {
+      // Log the transaction object to debug
+      console.log('Processing transaction:', JSON.stringify(transaction, null, 2));
+
+      const suggestion = await suggestTransactionCategory(
+        transaction.description,
+        transaction.amount,
+        categories
+      );
+
+      console.log('Got suggestion for transaction:', {
+        id: transaction.id,
+        file_id: transaction.file_id,
+        description: transaction.description,
+        suggestion
+      });
+
+      if (suggestion?.categoryId && suggestion?.subHeaderId) {
+        const updateData = {
+          owner: selectedMapping.owner,
+          account_type: selectedMapping.account_type,
+          category_id: suggestion.categoryId,
+          sub_header_id: suggestion.subHeaderId,
+          categorized_by: 'AI',
+          ai_confidence: suggestion.confidence || 0.8,
+          last_modified_by: selectedMapping.owner
+        };
+
+        // Verify we have a valid ID before attempting update
+        if (!transaction.id) {
+          console.error('Transaction is missing ID:', transaction);
+          return false;
+        }
+
+        console.log('Attempting to update transaction:', {
+          id: transaction.id,
+          updateData
+        });
+
+        const { data, error } = await supabase
+          .from('transactions')
+          .update(updateData)
+          .eq('id', transaction.id)
+          .select();
+
+        if (error) {
+          console.error('Supabase update error:', error);
+          throw error;
+        }
+
+        console.log('Supabase update successful:', data);
+        return true;
+      } else {
+        console.log('No valid suggestion received for transaction:', transaction.description);
+        
+        // Toast notification for missing AI suggestion
+        toast({
+          title: "AI Categorization Warning",
+          description: `Could not categorize: ${transaction.description.substring(0, 30)}...`,
+          variant: "warning",
+        });
+        
+        return false;
+      }
+    } catch (error) {
+      console.error(`Attempt ${4 - retries} failed for transaction:`, {
+        id: transaction.id,
+        description: transaction.description,
+        error
+      });
+      retries--;
+      if (retries > 0) {
+        await delay(2000 * Math.pow(2, 3 - retries));
+      }
+    }
+  }
+  
+  // Toast notification for complete failure after all retries
+  toast({
+    title: "AI Categorization Failed",
+    description: `Failed to process transaction after multiple attempts: ${transaction.description.substring(0, 30)}...`,
+    variant: "destructive",
+  });
+  
+  return false;
+}
+
+async function processBatch(
+  transactions: any[],
+  categories: BudgetCategory[],
+  selectedMapping: AccountMapping,
+  toast: any
+): Promise<number> {
+  let successCount = 0;
+  
+  // Process transactions sequentially within the batch
+  for (const transaction of transactions) {
+    try {
+      const success = await processTransaction(transaction, categories, selectedMapping, toast);
+      if (success) successCount++;
+      // Small delay between transactions
+      await delay(TRANSACTION_DELAY);
+    } catch (error) {
+      console.error('Error processing transaction:', error);
+    }
+  }
+  
+  return successCount;
+}
+
+export function EnhancedFileUploadMaster({ year, onUploadSuccess }: EnhancedFileUploadMasterProps) {
+  const [selectedMonth, setSelectedMonth] = useState<Month | ''>('');
+  const [selectedAccount, setSelectedAccount] = useState<string>('');
+  const [files, setFiles] = useState<File[]>([]);
+  const [isUploading, setIsUploading] = useState(false);
+  const [accountMappings, setAccountMappings] = useState<AccountMapping[]>([]);
+  const [progress, setProgress] = useState(0);
+  const [statusMessage, setStatusMessage] = useState('');
+  const [isDragging, setIsDragging] = useState(false);
+  const [categories, setCategories] = useState<BudgetCategory[]>([]);
+  const { toast } = useToast();
+  
+  // Load account mappings and categories on component mount
+  useEffect(() => {
+    loadAccountMappings();
+    loadCategories();
+  }, []);
+  
+  async function loadAccountMappings() {
+    try {
+      const { data, error } = await supabase
+        .from('account_mappings')
+        .select('*')
+        .order('account_name');
+
+      if (error) throw error;
+      setAccountMappings(data || []);
+    } catch (error) {
+      console.error('Error loading account mappings:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load account mappings",
+        variant: "destructive",
+      });
+    }
+  }
+
+  async function loadCategories() {
+    try {
+      const { data, error } = await supabase
+        .from('budget_categories')
+        .select(`
+          id,
+          name,
+          type,
+          sub_headers:budget_sub_headers(id, name)
+        `);
+      
+      if (error) throw error;
+
+      const transformedData: BudgetCategory[] = (data || []).map((category) => ({
+        id: category.id,
+        name: category.name,
+        type: category.type,
+        monthlyamounts: {},
+        subHeaders: category.sub_headers.map(sub => ({
+          id: sub.id,
+          name: sub.name,
+          monthlyamounts: {},
+          category_id: category.id,
+          entries: []
+        })),
+        deletedSubHeaderIds: []
+      }));
+
+      setCategories(transformedData);
+    } catch (error) {
+      console.error('Error loading categories:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load categories",
+        variant: "destructive",
+      });
+    }
+  }
+
+  // Handle file selection via file input
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files) {
+      const newFiles = Array.from(event.target.files).filter(file => {
+        const ext = file.name.split('.').pop()?.toLowerCase();
+        return ext === 'xlsx' || ext === 'csv';
+      });
+      setFiles(prev => [...prev, ...newFiles]);
+    }
+  };
+  
+  // Handle drag and drop events
+  const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    setIsDragging(true);
+  };
+  
+  const handleDragLeave = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    setIsDragging(false);
+  };
+  
+  const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    setIsDragging(false);
+    
+    const droppedFiles = Array.from(event.dataTransfer.files).filter(file => {
+      const ext = file.name.split('.').pop()?.toLowerCase();
+      return ext === 'xlsx' || ext === 'csv';
+    });
+    
+    setFiles(prev => [...prev, ...droppedFiles]);
+  };
+  
+  // Remove a file from the list
+  const removeFile = (index: number) => {
+    setFiles(prev => prev.filter((_, i) => i !== index));
+  };
+  
+  // Upload and process files
+  const handleUpload = async () => {
+    if (!selectedMonth || !selectedAccount || files.length === 0) {
+      toast({
+        title: "Warning",
+        description: "Please select a month, account, and add files before uploading",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const selectedMapping = accountMappings.find(m => m.id === selectedAccount);
+    if (!selectedMapping) {
+      toast({
+        title: "Error",
+        description: "Selected account mapping not found",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsUploading(true);
+    setProgress(0);
+    let totalProcessed = 0;
+    let totalTransactions = 0;
+
+    try {
+      for (const file of files) {
+        setStatusMessage(`Processing file: ${file.name}`);
+        const monthDate = new Date(year, FULL_MONTHS.indexOf(selectedMonth as Month), 1);
+        
+        // Create a transaction file record
+        const fileRecord = await createTransactionFile(
+          file.name,
+          monthDate,
+          file.name.endsWith('.xlsx') ? 'xlsx' : 'csv',
+          selectedMapping.account_type
+        );
+
+        // Read and process the file
+        const fileContent = await file.arrayBuffer();
+        const transactions = await processTransactionFile(
+          fileContent, 
+          fileRecord.id,
+          selectedMapping.account_type,
+          selectedMapping.owner
+        );
+        
+        if (!transactions) continue;
+        
+        totalTransactions += transactions.length;
+        
+        // Process transactions in batches
+        for (let i = 0; i < transactions.length; i += BATCH_SIZE) {
+          const batch = transactions.slice(i, i + BATCH_SIZE);
+          setStatusMessage(`Processing transactions ${i + 1} to ${Math.min(i + BATCH_SIZE, transactions.length)} of ${transactions.length}`);
+          
+          const successCount = await processBatch(batch, categories, selectedMapping, toast);
+          totalProcessed += successCount;
+          setProgress((totalProcessed / totalTransactions) * 100);
+          
+          if (i + BATCH_SIZE < transactions.length) {
+            await delay(BATCH_DELAY);
+          }
+        }
+
+        await supabase
+          .from('transaction_files')
+          .update({ 
+            status: 'completed', 
+            processed_at: new Date().toISOString(),
+            processed_count: totalProcessed
+          })
+          .eq('id', fileRecord.id);
+      }
+
+      toast({
+        title: "Success",
+        description: `Processed ${totalProcessed} of ${totalTransactions} transactions successfully`,
+      });
+
+      setFiles([]);
+      setSelectedMonth('');
+      setSelectedAccount('');
+      setStatusMessage('');
+      setProgress(0);
+      onUploadSuccess();
+
+    } catch (error) {
+      console.error('Upload failed:', error);
+      toast({
+        title: "Error",
+        description: "Failed to process files. Some transactions may need manual categorization.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  return (
+    <div className="card">
+      <div className="card-header">
+        <h2 className="card-title">Upload Transaction Files</h2>
+        <p className="card-subtitle">Upload your bank or credit card statements for {year}</p>
+      </div>
+      
+      <div className="card-content">
+        <div className="form-group">
+          <label className="form-label" htmlFor="account-select">Account</label>
+          <select 
+            id="account-select"
+            className="form-control select-control"
+            value={selectedAccount}
+            onChange={(e) => setSelectedAccount(e.target.value)}
+            disabled={isUploading}
+          >
+            <option value="">Select account...</option>
+            {accountMappings.map(mapping => (
+              <option key={mapping.id} value={mapping.id}>
+                {mapping.account_name} ({mapping.owner} - {mapping.account_type})
+              </option>
+            ))}
+          </select>
+        </div>
+        
+        <div className="form-group">
+          <label className="form-label" htmlFor="month-select">Month</label>
+          <select 
+            id="month-select"
+            className="form-control select-control"
+            value={selectedMonth}
+            onChange={(e) => setSelectedMonth(e.target.value as Month)}
+            disabled={isUploading}
+          >
+            <option value="">Select month...</option>
+            {FULL_MONTHS.map((month) => (
+              <option key={month} value={month}>
+                {month}
+              </option>
+            ))}
+          </select>
+        </div>
+        
+        <div className="form-group">
+          <label className="form-label">Upload Files</label>
+          <div 
+            className={`file-dropzone ${isDragging ? 'dragover' : ''}`}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+          >
+            <input
+              type="file"
+              id="file-upload"
+              className="hidden"
+              multiple
+              accept=".xlsx,.csv"
+              onChange={handleFileChange}
+              disabled={isUploading}
+            />
+            <label htmlFor="file-upload">
+              <Upload size={32} className="dropzone-icon" />
+              <p className="font-medium text-base">Click to upload or drag files here</p>
+              <p className="text-tertiary text-sm">Excel or CSV files only</p>
+            </label>
+          </div>
+        </div>
+        
+        {/* File list */}
+        {files.length > 0 && (
+          <div className="form-group">
+            <label className="form-label">Selected Files</label>
+            <div className="bg-surface-active p-4 rounded-lg">
+              <ul className="file-list">
+                {files.map((file, index) => (
+                  <li key={index} className="flex items-center justify-between py-2 border-b border-divider last:border-0">
+                    <div className="flex items-center">
+                      <File size={16} className="mr-2 text-tertiary" />
+                      <span className="text-sm">{file.name}</span>
+                    </div>
+                    <button 
+                      className="text-tertiary hover:text-error p-1 rounded-full hover:bg-error-surface"
+                      onClick={() => removeFile(index)}
+                      disabled={isUploading}
+                    >
+                      <X size={16} />
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        )}
+        
+        {/* Progress bar */}
+        {isUploading && (
+          <div className="form-group">
+            <div className="mb-2 text-sm text-secondary">{statusMessage}</div>
+            <div className="progress">
+              <div className="progress-bar" style={{ width: `${progress}%` }}></div>
+            </div>
+          </div>
+        )}
+        
+        {/* Upload status message */}
+        {!isUploading && statusMessage && (
+          <div className="form-group">
+            <div className="flex items-center text-sm">
+              {statusMessage.includes('Error') ? (
+                <AlertCircle size={16} className="mr-2 text-error" />
+              ) : (
+                <CheckCircle size={16} className="mr-2 text-success" />
+              )}
+              {statusMessage}
+            </div>
+          </div>
+        )}
+        
+        <button 
+          className="btn btn-primary w-full"
+          onClick={handleUpload}
+          disabled={!selectedMonth || !selectedAccount || files.length === 0 || isUploading}
+        >
+          {isUploading ? 'Processing...' : 'Upload Files'}
+        </button>
+      </div>
+    </div>
+  );
+}

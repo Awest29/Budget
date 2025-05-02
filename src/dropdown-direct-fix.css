@@ -1,0 +1,108 @@
+/* Direct fixes for the dropdown backgrounds */
+
+/* Target the month dropdown in the Personal Analysis page */
+.person-analysis-page .SelectTrigger,
+.person-analysis-page [class*="SelectTrigger"],
+.person-analysis-container .SelectTrigger,
+.person-analysis-container [class*="SelectTrigger"] {
+  background-color: white !important;
+  color: #334155 !important;
+  border-color: #e2e8f0 !important;
+}
+
+/* Directly target the portal context */
+[data-radix-portal],
+[role="presentation"] > [data-radix-popper-content-wrapper],
+[id*="radix-"] {
+  background-color: transparent !important; /* This lets the content style show through */
+}
+
+/* Directly target the dropdown content */
+[data-radix-select-content],
+[role="listbox"],
+[class*="SelectContent"],
+.SelectContent,
+div[role="presentation"] > div {
+  background-color: white !important;
+  color: #334155 !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Most important: target ANY dropdown elements with !important */
+[role="option"],
+[data-radix-select-item],
+[class*="SelectItem"],
+option,
+select option {
+  background-color: white !important;
+  color: #334155 !important;
+}
+
+/* If the dropdown is using a data-value attribute (common in month selectors) */
+[data-value="January"], 
+[data-value="February"], 
+[data-value="March"], 
+[data-value="April"], 
+[data-value="May"], 
+[data-value="June"], 
+[data-value="July"], 
+[data-value="August"], 
+[data-value="September"], 
+[data-value="October"], 
+[data-value="November"], 
+[data-value="December"] {
+  background-color: white !important;
+  color: #334155 !important;
+}
+
+/* SUPER aggressive direct override for the actual component */
+/* This makes sure we catch the exact dropdown we want in the Person Analysis page */
+div[style*="background: #334155"] .Select + div[role="presentation"] > div,
+div[style*="background-color: white"] .Select + div[role="presentation"] > div,
+.person-analysis-page div[role="presentation"] > div,
+.person-analysis-page div[class*="SelectContent"],
+.person-analysis-container div[role="presentation"] > div,
+.person-analysis-container div[class*="SelectContent"] {
+  background-color: white !important;
+  color: #334155 !important;
+}
+
+/* Fix for when month trigger is clicked or focused */
+div[style*="background: #334155"] .SelectTrigger[data-state="open"],
+.person-analysis-page .SelectTrigger[data-state="open"],
+.person-analysis-container .SelectTrigger[data-state="open"] {
+  background-color: white !important;
+  color: #334155 !important;
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2) !important;
+}
+
+/* Extra-specific selectors for this page's dropdown content */
+div.min-h-screen.person-analysis-page[style*="background: #334155"] + div[role="presentation"] > div,
+div.person-analysis-page div[role="presentation"] > div {
+  background-color: white !important;
+  color: #334155 !important;
+}
+
+/* Special Radix UI internals */
+[data-radix-select-viewport] {
+  background-color: white !important;
+}
+
+/* For the items in the dropdown list */
+[data-radix-select-viewport] > * {
+  background-color: white !important;
+  color: #334155 !important;
+}
+
+/* Special for Chrome, which can behave differently */
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  .person-analysis-page select option,
+  .min-h-screen[style*="background"] select option,
+  select option,
+  option {
+    background-color: white !important;
+    color: #334155 !important;
+  }
+}

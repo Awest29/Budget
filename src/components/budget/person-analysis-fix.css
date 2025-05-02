@@ -1,0 +1,202 @@
+/* Specific fixes for the Personal Analysis page */
+
+/* Month dropdown styling */
+.content-card select,
+.content-card [role="combobox"],
+.card-content select,
+.card-content .form-control,
+#month-selector select,
+.card select,
+.content-card .select-trigger,
+.card .select-trigger,
+[data-state="open"] .select-trigger,
+[class*="SelectTrigger"],
+[class*="select-trigger"] {
+  background-color: white !important;
+  border-color: #e2e8f0 !important;
+  color: #334155 !important;
+  border-radius: 6px !important;
+}
+
+/* Ensure dropdown content is also themed properly */
+[class*="SelectContent"],
+.select-content,
+[data-radix-select-content],
+[role="listbox"] {
+  background-color: white !important;
+  border-color: #e2e8f0 !important;
+  color: #334155 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+[class*="SelectItem"],
+.select-item,
+[data-radix-select-item],
+[role="option"] {
+  color: #334155 !important;
+}
+
+[class*="SelectItem"]:hover,
+.select-item:hover,
+[data-radix-select-item]:hover,
+[role="option"]:hover {
+  background-color: #f1f5f9 !important;
+}
+
+/* Fix background color of the Personal Analysis page */
+.person-analysis-background,
+[style*="background: rgb(51, 65, 85)"],
+[style*="background: #334155"],
+[style*="background:#334155"] {
+  background: white !important;
+}
+
+/* Fix card styling in Personal Analysis page */
+.person-analysis-container .content-card,
+.person-analysis-page .content-card {
+  background-color: white !important;
+  color: #334155 !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Fix headings in Personal Analysis */
+.person-analysis-container h2,
+.person-analysis-container h3,
+.person-analysis-page h2,
+.person-analysis-page h3,
+.person-analysis-container .page-title,
+.person-analysis-page .page-title {
+  color: #334155 !important;
+}
+
+/* Fix table styling for better readability */
+.person-analysis-container table,
+.person-analysis-page table {
+  background-color: white !important;
+  color: #334155 !important;
+}
+
+.person-analysis-container .table-container,
+.person-analysis-page .table-container {
+  background-color: white !important;
+}
+
+/* Apply directly to the container div with background style */
+div[style*="background: #334155"],
+div[style*="background: rgb(51, 65, 85)"],
+div[style*="background:#334155"] {
+  background: white !important;
+}
+
+/* Make text more readable on light background */
+div[style*="background: #334155"] *,
+div[style*="background: rgb(51, 65, 85)"] *,
+div[style*="background:#334155"] * {
+  color: #334155 !important;
+}
+
+/* Force override for the page and content */
+.min-h-screen[style*="background"],
+.min-h-screen[style*="background"] * {
+  background-color: white !important;
+  color: #334155 !important;
+}
+
+.min-h-screen[style*="background"] .content-card {
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Fix nested content cards to have proper borders */
+.content-card .content-card {
+  border: 1px solid #e2e8f0 !important;
+  margin-bottom: 1.5rem !important;
+}
+
+/* Fix for specific UI elements in the page */
+.app-container,
+.page-title,
+.content-card,
+.text-lg,
+.font-semibold {
+  color: #334155 !important;
+}
+
+/* Styles for the collapsible table rows */
+.collapsible-row td {
+  background-color: #f9fafb !important;
+  padding: 0 !important;
+}
+
+.collapsible-row table {
+  margin: 0 !important;
+  box-shadow: none !important;
+}
+
+.collapsible-row td[colspan] {
+  padding: 0 !important;
+}
+
+/* Styles for the collapsible table rows */
+.collapsible-row td {
+  background-color: #f9fafb !important;
+  padding: 0 !important;
+}
+
+.collapsible-row table {
+  margin: 0 !important;
+  box-shadow: none !important;
+}
+
+.collapsible-row td[colspan] {
+  padding: 0 !important;
+}
+
+/* Enhanced styling for subcategories */
+.subcategory-name {
+  font-weight: 600;
+  color: #334155 !important;
+}
+
+/* Improve chevron alignment */
+.w-5.flex.justify-center {
+  min-width: 20px;
+}
+
+.category-name {
+  padding-left: 0 !important;
+}
+
+/* Fix for grid rows */
+.grid.grid-cols-10 {
+  background-color: white !important;
+  color: #334155 !important;
+}
+
+/* Fix specific colored rows */
+.bg-muted\/30,
+.bg-gray-50,
+.bg-emerald-50,
+.bg-blue-50 {
+  background-color: #f8fafc !important;
+  color: #334155 !important;
+}
+
+/* Value coloring - preserve these */
+.positive-value {
+  color: #10b981 !important;
+}
+
+.negative-value {
+  color: #ef4444 !important;
+}
+
+/* Exception for specifically colored backgrounds that should be preserved */
+.bg-emerald-50 {
+  background-color: #ecfdf5 !important;
+}
+
+.bg-blue-50 {
+  background-color: #eff6ff !important;
+}

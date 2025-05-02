@@ -1,0 +1,297 @@
+/* Switch/Toggle styling */
+.budget-analysis-container [role="switch"] span {
+  background-color: white !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15) !important;
+  width: 16px !important;
+  height: 16px !important;
+}
+
+.budget-analysis-container [role="switch"][data-state="checked"] {
+  background-color: #2563eb !important;
+}
+
+.budget-analysis-container [role="switch"][data-state="unchecked"] {
+  background-color: #d1d5db !important;
+}
+
+.budget-analysis-container .toggle-label {
+  font-weight: 500 !important;
+  color: #000000 !important;
+}
+
+/* YTD Toggle Container */
+.ytd-switch-container {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  background-color: #f8fafc !important;
+  padding: 6px 12px !important;
+  border-radius: 6px !important;
+  border: 1px solid #e2e8f0 !important;
+  margin-left: 8px !important;
+}
+
+/* Dropdown styling - updated for better contrast and readability */
+.select-content {
+  background-color: white !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #000000 !important;
+  z-index: 9999 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+.select-item {
+  color: #000000 !important;
+  padding: 8px 12px !important;
+}
+
+.select-item:hover {
+  background-color: #f1f5f9 !important;
+}
+
+.select-item[data-highlighted],
+.select-item[data-state="checked"] {
+  background-color: #eff6ff !important;
+  color: #2563eb !important;
+  font-weight: 500 !important;
+}
+
+/* Controls styling */
+.budget-analysis-container .select-trigger,
+.budget-analysis-container .select-value,
+.budget-analysis-container label {
+  color: #000000 !important;
+  font-weight: 500 !important;
+}
+
+.budget-analysis-container [role="combobox"] {
+  border: 1px solid #cbd5e1 !important;
+  background-color: white !important;
+}
+
+.budget-analysis-container .select-trigger:focus,
+.budget-analysis-container .select-trigger:hover {
+  border-color: #2563eb !important;
+  box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.5) !important;
+}
+
+/* Controls wrapper */
+.analysis-controls {
+  background-color: white !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 0.5rem !important;
+  padding: 1rem !important;
+  margin-bottom: 1.5rem !important;
+}
+
+/* YTD toggle styling */
+.ytd-toggle {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+}
+
+.ytd-toggle label {
+  color: #000000 !important;
+  font-weight: 500 !important;
+}
+
+/* Improved styling for the Budget Analysis page to match Budget Summary */
+
+/* Table styling */
+.budget-comparison-table {
+  border-collapse: collapse !important;
+  width: 100% !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 0.5rem !important;
+  overflow: hidden !important;
+}
+
+.budget-comparison-table th:first-child {
+  text-align: left !important;
+}
+
+.budget-comparison-table th:not(:first-child) {
+  text-align: right !important;
+}
+
+/* More readable values */
+.budget-comparison-table th,
+.budget-comparison-table td {
+  font-variant-numeric: tabular-nums !important;
+  white-space: nowrap !important;
+}
+
+/* Table header styling */
+.budget-comparison-table th {
+  background-color: #f8fafc !important;
+  color: #1e293b !important;
+  font-weight: 600 !important;
+  border-bottom: 1px solid #cbd5e1 !important;
+  padding: 12px 16px !important;
+  text-align: left !important;
+}
+
+/* Table cell styling */
+.budget-comparison-table td {
+  padding: 12px 16px !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+  color: #000000 !important;
+}
+
+/* Income row styling */
+.budget-comparison-table tr[data-type="income"] {
+  background-color: #f8fafc !important;
+}
+
+.budget-comparison-table tr[data-type="income"] td {
+  color: #000000 !important;
+  font-weight: 500 !important;
+}
+
+/* Fixed costs row styling */
+.budget-comparison-table tr[data-type="fixed"] {
+  background-color: #e6efff !important;
+}
+
+.budget-comparison-table tr[data-type="fixed"] td {
+  color: #000000 !important;
+  font-weight: 500 !important;
+}
+
+/* Variable costs row styling */
+.budget-comparison-table tr[data-type="variable"] {
+  background-color: #f8fafc !important;
+}
+
+/* Row hover effect */
+.budget-comparison-table tr:hover td {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Category styling */
+.budget-comparison-table .category-row td {
+  padding-left: 2rem !important;
+  color: #000000 !important;
+}
+
+/* Subcategory styling */
+.budget-comparison-table .subcategory-row td {
+  padding-left: 3rem !important;
+  color: #000000 !important;
+}
+
+/* Net income row styling */
+.budget-comparison-table .net-income-row {
+  background-color: #dcfce7 !important;
+  border-top: 2px solid #0f766e !important;
+}
+
+.budget-comparison-table .net-income-row td {
+  color: #000000 !important;
+  font-weight: 600 !important;
+}
+
+/* Value formatting */
+.budget-comparison-table .budget-value {
+  color: #1e293b !important;
+  font-variant-numeric: tabular-nums !important;
+  font-weight: 500 !important;
+}
+
+.budget-comparison-table .positive-value {
+  color: #16a34a !important;
+  font-weight: 600 !important;
+}
+
+.budget-comparison-table .negative-value {
+  color: #dc2626 !important;
+  font-weight: 600 !important;
+}
+
+/* Card styling for statistics */
+.budget-analysis-card {
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 0.5rem !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+  background-color: white !important;
+}
+
+.budget-analysis-card .card-header {
+  font-weight: 600 !important;
+  color: #1e293b !important;
+}
+
+.budget-analysis-card .card-value {
+  font-size: 1.5rem !important;
+  font-weight: 700 !important;
+  color: #000000 !important;
+}
+
+/* Group headers */
+.budget-comparison-table .group-header {
+  background-color: #f1f5f9 !important;
+  font-weight: 600 !important;
+  color: #0f172a !important;
+  cursor: pointer !important;
+}
+
+.budget-comparison-table .group-header:hover {
+  background-color: #e2e8f0 !important;
+}
+
+/* Collapsible sections */
+.modern-collapsible {
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 0.5rem !important;
+  margin-bottom: 1rem !important;
+  overflow: hidden !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+}
+
+.modern-collapsible .collapsible-header {
+  background-color: #f8fafc !important;
+  padding: 1rem !important;
+  font-weight: 600 !important;
+  color: #000000 !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+  cursor: pointer !important;
+}
+
+.modern-collapsible .collapsible-title {
+  color: #000000 !important;
+  font-weight: 600 !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.modern-collapsible .collapsible-icon {
+  color: #000000 !important;
+}
+
+.modern-collapsible .collapsible-content {
+  padding: 0 !important;
+  background-color: #ffffff !important;
+}
+
+.modern-collapsible:hover .collapsible-header {
+  background-color: #f1f5f9 !important;
+}
+
+/* Main container styling */
+.budget-analysis-container {
+  padding: 1.5rem !important;
+}
+
+.budget-analysis-container h2 {
+  color: #0f172a !important;
+  font-size: 1.5rem !important;
+  font-weight: 700 !important;
+  margin-bottom: 0.5rem !important;
+}
+
+.budget-analysis-container p {
+  color: #475569 !important;
+  margin-bottom: 1.5rem !important;
+}

@@ -1,0 +1,67 @@
+/* Alternating row colors for the budget table */
+
+/* Header row (light blue from sidebar) */
+.budget-table thead tr {
+  background-color: #e6efff !important;
+}
+
+/* Remove default very light gray backgrounds */
+.budget-table tbody tr {
+  background-color: white !important;
+}
+
+/* Apply the light blue color to even rows (starting with 0) */
+.budget-table tbody tr:nth-of-type(even) {
+  background-color: #e6efff !important;
+}
+
+/* Make sure expanded subrows follow the pattern of their parent */
+.budget-table tbody tr.item-row {
+  background-color: white !important;
+}
+
+/* Override for specific rows */
+.budget-table tr.net-income-row {
+  background-color: white !important;
+}
+
+/* Fixed color pattern regardless of position */
+.budget-table .category-type-row {
+  background-color: #e6efff !important;
+}
+
+.budget-table .income-row {
+  background-color: white !important;
+}
+
+.budget-table .fixed-costs-row {
+  background-color: #e6efff !important;
+}
+
+.budget-table .variable-costs-row {
+  background-color: white !important;
+}
+
+.budget-table .extraordinary-costs-row {
+  background-color: #e6efff !important;
+}
+
+.budget-table .net-income-row {
+  background-color: white !important;
+}
+
+/* Ensure these colors don't change on hover */
+.budget-table tr:hover td {
+  background-color: inherit !important;
+}
+
+/* Ensure the borders are still visible */
+.budget-table th,
+.budget-table td {
+  border: 1px solid #cbd5e1 !important;
+}
+
+/* Border for Net Income row */
+.budget-table tr.net-income-row td {
+  border-top: 2px solid #94a3b8 !important;
+}

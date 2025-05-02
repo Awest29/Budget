@@ -1,0 +1,46 @@
+/* Very targeted CSS to completely remove the DialogOverlay */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* Target the overlay directly and remove it */
+[class*="DialogOverlay-"],
+[class*="DialogOverlay"],
+[data-radix-collection-item],
+[data-radix-dialog-overlay],
+[class*="DialogPrimitive__Overlay"],
+body div[data-radix-dialog-root] > div:not([class*="DialogContent"]):not([class*="DialogPortal"]),
+body > div[role="presentation"],
+body > div[data-state]:not([data-radix-dialog-content]) {
+  opacity: 0 !important;
+  background-color: transparent !important;
+  visibility: hidden !important;
+  display: none !important;
+}
+
+/* Directly access dialog component */
+[class*="DialogContent"],
+div[role="dialog"],
+div[data-radix-dialog-content] {
+  background-color: white !important;
+  color: black !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.2) !important;
+  z-index: 9999 !important;
+}
+
+/* Make the inputs in the dialog white with black text */
+div[role="dialog"] input {
+  background-color: white !important;
+  color: black !important;
+  border: 1px solid #e2e8f0 !important;
+  padding: 8px 12px !important;
+}
+
+/* Stronger selector for dialog inputs */
+div[data-radix-dialog-content] input,
+div[data-state="open"][role="dialog"] input,
+.sm\:max-w-\[425px\] input,
+[class*="DialogContent"] input {
+  background-color: white !important;
+  color: black !important;
+  border: 1px solid #d1d5db !important;
+}

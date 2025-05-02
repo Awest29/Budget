@@ -1,0 +1,48 @@
+/* Fix for search field and dropdowns in transaction page */
+
+/* Search field styling fix */
+input[placeholder="Search transactions..."],
+input[type="text"][placeholder*="Search"],
+.form-control[placeholder*="Search"] {
+  background-color: white !important;
+  border-color: #e2e8f0 !important;
+  color: #334155 !important;
+  border-radius: 6px !important;
+  padding-left: 2.5rem !important;
+}
+
+/* Ensure search icon is properly positioned and colored */
+.relative svg[class*="lucide-search"],
+[class*="search-icon"] {
+  color: #94a3b8 !important;
+}
+
+/* Fix for dropdowns in transaction page */
+/* Target all dropdown elements with increased specificity */
+.transactions-container select,
+.transactions-container [role="combobox"],
+.card-content select,
+.card-content .form-control,
+[id*="month"] select,
+[id*="month"] .select-trigger {
+  background-color: white !important;
+  border-color: #e2e8f0 !important;
+  color: #334155 !important;
+  border-radius: 6px !important;
+}
+
+/* Hover states */
+.transactions-container select:hover,
+.card-content select:hover,
+.card-content .form-control:hover {
+  border-color: #cbd5e1 !important;
+}
+
+/* Focus states */
+.transactions-container select:focus,
+.card-content select:focus,
+.card-content .form-control:focus {
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2) !important;
+  outline: none !important;
+}

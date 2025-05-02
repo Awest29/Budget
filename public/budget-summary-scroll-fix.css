@@ -1,0 +1,251 @@
+/* budget-summary-scroll-fix.css - Fix scrolling issues in Budget Summary table only */
+
+/* Target only the Budget Summary card content container */
+.budget-summary-card .card-content {
+  overflow: visible !important; /* Override hidden overflow */
+  max-height: none !important;
+}
+
+/* Target only the Budget Summary table container */
+.budget-summary-card .table-container {
+  overflow-x: auto !important;
+  overflow-y: visible !important;
+  max-width: 100% !important;
+  width: 100% !important;
+  -webkit-overflow-scrolling: touch !important;
+  max-height: none !important;
+  position: relative !important;
+}
+
+/* Ensure proper table display while maintaining fixed layout */
+.budget-summary-card .budget-summary-table {
+  display: table !important;
+  table-layout: fixed !important;
+  width: auto !important;
+  min-width: 100% !important;
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+}
+
+/* Fix for sticky header row */
+.budget-summary-card .budget-summary-table thead tr {
+  display: table-row !important;
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 10 !important;
+}
+
+/* Fix for sticky first column (less specific selector to avoid conflicts) */
+.budget-summary-card .budget-summary-table th:first-child,
+.budget-summary-card .budget-summary-table td:first-child {
+  position: sticky !important;
+  left: 0 !important;
+  z-index: 9 !important;
+}
+
+/* Special case for the top-left corner cell */
+.budget-summary-card .budget-summary-table thead th:first-child {
+  position: sticky !important;
+  top: 0 !important;
+  left: 0 !important;
+  z-index: 11 !important;
+}
+
+/* Style all input fields in the budget summary, including add forms */
+.budget-summary-card input[type="text"],
+.budget-summary-card input[type="number"],
+.budget-summary-card .add-input,
+.budget-summary-card .add-form input {
+  -moz-appearance: textfield !important; /* Firefox */
+  background-color: #f8f9fa !important; /* Lighter background */
+  border: 1px solid #ced4da !important; /* Clear border */
+  padding: 4px 8px !important; /* More padding for better visibility */
+  font-size: 14px !important; /* Ensure readable font size */
+  color: #000000 !important; /* Ensure text is black */
+  width: 85% !important; /* Not too wide */
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.05) !important; /* Subtle inner shadow */
+  border-radius: 4px !important; /* Rounded corners */
+}
+
+/* Specific styles for add form fields */
+.budget-summary-card .add-form .add-input {
+  width: 100% !important; /* Full width within its container */
+  margin-right: 8px !important; /* Space between input and buttons */
+}
+
+/* Style the Add Category input field */
+.budget-summary-card .add-form input[placeholder="New category name"] {
+  background-color: #f8f9fa !important;
+  border: 1px solid #ced4da !important;
+  border-radius: 4px !important;
+  padding: 6px 10px !important; /* Slightly larger padding for this input */
+}
+
+/* Style the dropdown for category type */
+.budget-summary-card .add-select {
+  background-color: #f8f9fa !important;
+  border: 1px solid #ced4da !important;
+  border-radius: 4px !important;
+  padding: 6px 10px !important;
+  color: #000000 !important;
+  margin-right: 8px !important;
+}
+
+/* Style for the Add Item button */
+.budget-summary-card .add-btn {
+  background-color: #4b7bec !important; /* Match the blue color in the screenshots */
+  color: white !important;
+  padding: 6px 12px !important;
+  border-radius: 4px !important;
+  border: none !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+}
+
+/* Style for the Cancel button */
+.budget-summary-card .cancel-btn {
+  background-color: #e2e8f0 !important; /* Light gray background */
+  color: #4a5568 !important; /* Darker text for contrast */
+  padding: 6px 12px !important;
+  border-radius: 4px !important;
+  border: none !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+}
+
+/* Style the Add Item input that spans across the table */
+.budget-summary-card .item-row td[colspan="14"] {
+  padding-right: 35% !important; /* Reduce the effective width */
+}
+
+.budget-summary-card .item-row td[colspan="14"] .add-form {
+  max-width: 350px !important; /* Limit the form width */
+  margin-right: auto !important;
+}
+
+.budget-summary-card .item-row td[colspan="14"] input {
+  width: 250px !important; /* Fixed width for the input */
+  max-width: 250px !important;
+}
+
+.budget-summary-card .item-row td[colspan="14"] button.add-btn {
+  display: inline-block !important;
+  margin-left: 8px !important;
+}
+
+.budget-summary-card .item-row td[colspan="14"] button.cancel-btn {
+  display: inline-block !important;
+  margin-left: 4px !important;
+}
+
+/* Style the Edit Dialog to match the table styling */
+.budget-summary-card .dialog-edit-content,
+.budget-summary-card [class*="DialogContent"],
+.sm\:max-w-\[425px\].bg-white.dialog-edit-content,
+[class*="DialogContent"] {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  border: 1px solid #e2e8f0 !important;
+  max-width: 500px !important;
+  width: 95% !important;
+  padding: 24px !important;
+}
+
+/* Style the dialog header */
+.budget-summary-card [class*="DialogHeader"],
+[class*="DialogHeader"] {
+  margin-bottom: 20px !important;
+}
+
+/* Style the dialog title */
+.budget-summary-card [class*="DialogTitle"],
+[class*="DialogTitle"] {
+  color: #000000 !important;
+  font-size: 20px !important;
+  font-weight: 600 !important;
+}
+
+/* Style the input labels */
+.budget-summary-card [class*="Label"],
+[class*="Label"] {
+  color: #4a5568 !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  margin-bottom: 6px !important;
+  display: block !important;
+}
+
+/* Style the inputs in the dialog */
+.budget-summary-card [class*="DialogContent"] input,
+[class*="DialogContent"] input {
+  background-color: #ffffff !important; /* White background */
+  border: 1px solid #ced4da !important;
+  border-radius: 4px !important;
+  padding: 8px 12px !important;
+  font-size: 16px !important;
+  width: 100% !important;
+  color: #000000 !important; /* Black text */
+  margin-bottom: 16px !important;
+  box-shadow: none !important;
+}
+
+/* Style the dialog buttons */
+.budget-summary-card [class*="Button"],
+[class*="DialogContent"] button {
+  padding: 8px 16px !important;
+  border-radius: 4px !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+}
+
+/* Style the Save button */
+.budget-summary-card [class*="DialogContent"] button:last-child,
+[class*="DialogContent"] button:last-child {
+  background-color: #4b7bec !important;
+  color: white !important;
+  border: none !important;
+}
+
+/* Style the Cancel button */
+.budget-summary-card [class*="DialogContent"] button:first-child,
+[class*="DialogContent"] button[variant="outline"] {
+  background-color: #e2e8f0 !important;
+  color: #4a5568 !important;
+  border: none !important;
+}
+
+/* Style the close button (X) in the top-right corner */
+.budget-summary-card [class*="DialogClose"],
+[class*="DialogClose"] {
+  position: absolute !important;
+  top: 16px !important;
+  right: 16px !important;
+  background: transparent !important;
+  border: none !important;
+  color: #4a5568 !important;
+  cursor: pointer !important;
+}
+
+/* Style for the larger 'Add New Category' button */
+.budget-summary-card .add-category-btn {
+  background-color: #4b7bec !important;
+  color: white !important;
+  padding: 8px 16px !important;
+  border-radius: 4px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  border: none !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+  font-size: 14px !important;
+}
+
+/* Remove spinner for Chrome, Safari, Edge, Opera */
+.budget-summary-card input[type="number"]::-webkit-outer-spin-button,
+.budget-summary-card input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none !important;
+  margin: 0 !important;
+}

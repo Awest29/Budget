@@ -1,0 +1,67 @@
+/* Budget Summary Table - Sticky Column Fix */
+
+/* Make the first column sticky */
+.budget-summary-table th:first-child,
+.budget-summary-table td:first-child {
+  position: sticky !important;
+  left: 0 !important;
+  z-index: 10 !important;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Ensure the header stays on top */
+.budget-summary-table thead th:first-child {
+  z-index: 11 !important;
+  background-color: #f8fafc !important;
+}
+
+/* Fix background colors for the sticky column to match their rows */
+.budget-summary-table tr.income-row td:first-child {
+  background-color: #e6efff !important;
+}
+
+.budget-summary-table tr.fixed-costs-row td:first-child {
+  background-color: #f1f5f9 !important;
+}
+
+.budget-summary-table tr.variable-costs-row td:first-child {
+  background-color: #ffffff !important;
+}
+
+.budget-summary-table tr.extraordinary-costs-row td:first-child {
+  background-color: #f1f5f9 !important;
+}
+
+.budget-summary-table tr.subcategory-row td:first-child {
+  background-color: #fcfcfd !important;
+}
+
+.budget-summary-table tr.item-row td:first-child {
+  background-color: #ffffff !important;
+}
+
+/* Fix width for extraordinary costs cell */
+.budget-summary-table tr.extraordinary-costs-row td:first-child {
+  min-width: 220px !important;
+  width: 220px !important;
+}
+
+/* Apply green background to the entire Net Income row */
+.budget-summary-table tr.net-income-row {
+  background-color: #dcfce7 !important;
+}
+
+.budget-summary-table tr.net-income-row td {
+  background-color: #dcfce7 !important;
+}
+
+/* Ensure the Net Income row's first cell has the correct background */
+.budget-summary-table tr.net-income-row td:first-child {
+  background-color: #dcfce7 !important;
+}
+
+/* Add a stronger border to the first column for better visibility */
+.budget-summary-table th:first-child,
+.budget-summary-table td:first-child {
+  border-right: 2px solid #cbd5e1 !important;
+}

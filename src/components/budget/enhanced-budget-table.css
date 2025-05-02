@@ -1,0 +1,232 @@
+/* Enhanced Budget Table Styling - Matching Budget Analysis Table */
+
+/* Container for the enhanced table */
+.enhanced-table-container {
+  overflow-x: auto;
+  background-color: white;
+  border-radius: 4px;
+}
+
+/* Main table styling */
+.enhanced-budget-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  min-width: 1000px; /* Ensure table doesn't get too narrow */
+}
+
+/* Header styling */
+.enhanced-budget-table .table-header th {
+  background-color: #f8fafc;
+  color: #000000;
+  font-weight: 700;
+  text-align: left;
+  padding: 12px 16px;
+  border-bottom: 1px solid #e2e8f0;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+}
+
+/* Right-align numeric columns */
+.enhanced-budget-table th.text-right {
+  text-align: right;
+}
+
+/* Column widths */
+.enhanced-budget-table .category-column {
+  width: 40%;
+  text-align: left;
+}
+
+.enhanced-budget-table .value-column {
+  width: 15%;
+  text-align: right;
+}
+
+/* Major category rows (Income, Fixed, Variable) */
+.enhanced-budget-table .major-category-row td {
+  background-color: #f8fafc;
+  font-weight: 700;
+  padding: 12px 16px;
+  border-bottom: 1px solid #e2e8f0;
+  color: #000000;
+}
+
+.enhanced-budget-table .major-category-row:hover td {
+  background-color: #f1f5f9;
+}
+
+.enhanced-budget-table .major-category-name {
+  font-size: 1rem;
+}
+
+/* Category rows (second level) */
+.enhanced-budget-table .category-row td {
+  background-color: white;
+  padding: 10px 16px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.enhanced-budget-table .category-row:hover td {
+  background-color: #f8fafc;
+}
+
+.enhanced-budget-table .category-name {
+  padding-left: 16px;
+}
+
+/* Subcategory rows (third level) */
+.enhanced-budget-table .subcategory-row td {
+  background-color: white;
+  padding: 8px 16px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.enhanced-budget-table .subcategory-row:hover td {
+  background-color: #f8fafc;
+}
+
+.enhanced-budget-table .subcategory-name {
+  padding-left: 32px;
+}
+
+/* Chevron styling and alignment */
+.enhanced-budget-table .chevron-container {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 24px;
+  height: 24px;
+  margin-right: 8px;
+}
+
+.enhanced-budget-table .chevron-icon {
+  width: 16px;
+  height: 16px;
+  transition: transform 0.2s ease;
+  color: #64748b;
+}
+
+/* Category and subcategory labels */
+.enhanced-budget-table .category-label,
+.enhanced-budget-table .subcategory-label {
+  font-weight: 600;
+}
+
+/* Transaction container */
+.enhanced-budget-table .transaction-container-row td {
+  padding: 0;
+  border-bottom: 1px solid #e2e8f0;
+  background-color: white !important;
+}
+
+.enhanced-budget-table .transaction-container-cell {
+  padding: 0 !important;
+  background-color: white !important;
+}
+
+/* Transaction table styling */
+.transaction-table-container {
+  margin: 0;
+  overflow: hidden;
+  background-color: white !important;
+  border: 1px solid #e2e8f0;
+}
+
+.transaction-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white !important;
+}
+
+.transaction-table .transaction-header th {
+  background-color: white !important;
+  color: #000000;
+  font-weight: 600;
+  text-align: left;
+  padding: 8px 12px;
+  border-bottom: 1px solid #e2e8f0;
+  font-size: 0.85rem;
+}
+
+.transaction-table .transaction-row td {
+  padding: 8px 12px;
+  border-bottom: 1px solid #e2e8f0;
+  background-color: white !important;
+  font-size: 0.9rem;
+}
+
+.transaction-table .transaction-row:last-child td {
+  border-bottom: none;
+}
+
+.transaction-table .transaction-row:hover td {
+  background-color: #f8fafc !important;
+}
+
+/* Total rows */
+.enhanced-budget-table .total-row td {
+  background-color: #f8fafc;
+  font-weight: 700;
+  padding: 12px 16px;
+  border-top: 1px solid #e2e8f0;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.enhanced-budget-table .total-label {
+  font-size: 1rem;
+}
+
+/* Value formatting */
+.enhanced-budget-table .income-value {
+  color: #10b981 !important; /* Green for income */
+  font-weight: 600;
+}
+
+.enhanced-budget-table .expense-value {
+  color: #ef4444 !important; /* Red for expenses */
+  font-weight: 600;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .enhanced-budget-table {
+    font-size: 0.875rem;
+  }
+  
+  .enhanced-budget-table th, 
+  .enhanced-budget-table td {
+    padding: 8px 12px;
+  }
+}
+
+/* Budget analysis card styling */
+.budget-analysis-card {
+  background-color: white;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.budget-analysis-card .card-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.budget-analysis-card .card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #000000;
+  margin-bottom: 4px;
+}
+
+.budget-analysis-card .card-subtitle {
+  font-size: 0.9rem;
+  color: #64748b;
+}
+
+.budget-analysis-card .card-content {
+  padding: 20px;
+}

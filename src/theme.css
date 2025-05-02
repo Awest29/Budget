@@ -1,0 +1,421 @@
+/* Shadcn UI Component Overrides */
+
+/* Card component overrides */
+.bg-card {
+  background-color: var(--card-bg) !important;
+  border-color: var(--border-color) !important;
+}
+
+.text-card-foreground {
+  color: var(--text-primary) !important;
+}
+
+h3[class*="Card"] {
+  color: var(--text-primary) !important;
+}
+
+.text-muted-foreground {
+  color: var(--text-secondary) !important;
+}
+
+/* Button component overrides */
+[class*="Button"] {
+  background-color: var(--button-primary) !important;
+  color: white !important;
+}
+
+[class*="Button"]:hover {
+  background-color: var(--button-primary-hover) !important;
+}
+
+[class*="Button"][data-variant="destructive"] {
+  background-color: #ef4444 !important;
+}
+
+[class*="Button"][data-variant="destructive"]:hover {
+  background-color: #dc2626 !important;
+}
+
+[class*="Button"][data-variant="outline"] {
+  background-color: transparent !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-primary) !important;
+}
+
+[class*="Button"][data-variant="outline"]:hover {
+  background-color: var(--card-bg-hover) !important;
+}
+
+/* Select component overrides */
+[class*="SelectTrigger"] {
+  background-color: white !important;
+  border-color: #e2e8f0 !important;
+  color: #334155 !important;
+  border-radius: 6px !important;
+}
+
+[class*="SelectTrigger"]:hover {
+  border-color: #cbd5e1 !important;
+}
+
+[class*="SelectTrigger"]:focus {
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2) !important;
+  outline: none !important;
+}
+
+[class*="SelectContent"] {
+  background-color: white !important;
+  border-color: #e2e8f0 !important;
+  color: #334155 !important;
+  border-radius: 6px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+[class*="SelectItem"] {
+  color: #334155 !important;
+}
+
+[class*="SelectItem"]:hover {
+  background-color: #f1f5f9 !important;
+}
+
+[class*="SelectItem"][data-highlighted],
+[class*="SelectItem"][data-state="checked"] {
+  background-color: #eff6ff !important;
+  color: #2563eb !important;
+  font-weight: 500 !important;
+}
+
+/* Progress component overrides */
+[class*="Progress"] {
+  background-color: var(--card-bg-hover) !important;
+}
+
+[class*="Progress"] > div {
+  background-color: var(--accent-blue) !important;
+}
+
+/* Table component overrides */
+table {
+  --tw-border-opacity: 1;
+  border-color: var(--border-color) !important;
+}
+
+th {
+  color: var(--text-secondary) !important;
+  border-bottom-color: var(--border-color) !important;
+}
+
+td {
+  color: var(--text-primary) !important;
+  border-bottom-color: var(--border-color) !important;
+}
+
+tr:hover td {
+  background-color: var(--card-bg-hover) !important;
+}
+
+/* Badge component overrides */
+[class*="Badge"] {
+  background-color: var(--card-bg-hover) !important;
+  color: var(--text-primary) !important;
+}
+
+[class*="Badge"][data-variant="secondary"] {
+  background-color: var(--accent-blue) !important;
+  color: white !important;
+}
+
+[class*="Badge"][data-variant="destructive"] {
+  background-color: #ef4444 !important;
+  color: white !important;
+}
+
+/* Dialog component overrides */
+[class*="DialogContent"] {
+  background-color: var(--card-bg) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-primary) !important;
+}
+
+[class*="DialogTitle"] {
+  color: var(--text-primary) !important;
+}
+
+[class*="DialogDescription"] {
+  color: var(--text-secondary) !important;
+}
+/* Dark theme with better contrast */
+
+/* Base colors */
+:root {
+  --background-dark: #1e293b;     /* Darker blue background */
+  --card-bg: #334155;             /* Card background */
+  --card-bg-hover: #475569;       /* Card hover background */
+  --text-primary: #f3f4f6;        /* Primary text (almost white) */
+  --text-secondary: #cbd5e1;      /* Secondary text (light gray) */
+  --text-muted: #94a3b8;          /* Muted text color */
+  --accent-blue: #3b82f6;         /* Accent blue */
+  --accent-blue-hover: #60a5fa;   /* Lighter blue for hover */
+  --border-color: #475569;        /* Border color */
+  --positive: #4ade80;            /* Green for positive values */
+  --negative: #f87171;            /* Red for negative values */
+  --table-header-bg: #334155;     /* Table header background */
+  --table-row-hover: #475569;     /* Table row hover */
+  --table-separator: #475569;     /* Table separator */
+  --button-primary: #3b82f6;      /* Primary button */
+  --button-primary-hover: #60a5fa; /* Primary button hover */
+}
+
+/* Background styling */
+body {
+  background-color: var(--background-dark);
+  color: var(--text-primary);
+}
+
+/* App container */
+.app-container {
+  padding: 1.5rem;
+}
+
+/* Content card styling */
+.content-card {
+  background-color: var(--card-bg);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  padding: 1.5rem 2rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid var(--border-color);
+  width: 100%;
+}
+
+/* Title styling */
+.page-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.page-subtitle {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  margin-bottom: 1.25rem;
+}
+
+/* Button styling */
+.primary-button {
+  background-color: var(--button-primary);
+  color: white;
+  font-weight: 500;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.primary-button:hover {
+  background-color: var(--button-primary-hover);
+}
+
+/* Table styling */
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+}
+
+th {
+  background-color: var(--table-header-bg);
+  color: var(--text-primary);
+  font-weight: 600;
+  text-align: left;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--table-separator);
+}
+
+td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--table-separator);
+  color: var(--text-primary);
+}
+
+tr:hover td {
+  background-color: var(--table-row-hover);
+}
+
+/* Value styling */
+.negative-value {
+  color: var(--negative) !important;
+}
+
+.positive-value {
+  color: var(--positive) !important;
+}
+
+/* Collapsible cards styling */
+.collapsible-card-header {
+  background-color: var(--card-bg);
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  transition: background-color 0.2s ease;
+}
+
+.collapsible-card-header:hover {
+  background-color: var(--card-bg-hover);
+}
+
+.collapsible-card-title {
+  color: var(--text-primary);
+}
+
+/* Form elements */
+input {
+  background-color: var(--card-bg-hover) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-primary) !important;
+}
+
+select, .select-trigger {
+  background-color: white !important;
+  border-color: #e2e8f0 !important;
+  color: #334155 !important;
+  border-radius: 6px !important;
+}
+
+select:hover, .select-trigger:hover {
+  border-color: #cbd5e1 !important;
+}
+
+select:focus, .select-trigger:focus {
+  border-color: #3b82f6 !important; 
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2) !important;
+  outline: none !important;
+}
+
+input::placeholder {
+  color: var(--text-muted);
+}
+
+.select-content {
+  background-color: white !important;
+  border-color: #e2e8f0 !important;
+  color: #334155 !important;
+  border-radius: 6px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+.select-item {
+  color: #334155 !important;
+}
+
+.select-item:hover {
+  background-color: #f1f5f9 !important;
+}
+
+.select-item[data-highlighted],
+.select-item[data-state="checked"] {
+  background-color: #eff6ff !important;
+  color: #2563eb !important;
+  font-weight: 500 !important;
+}
+
+/* File upload area */
+.file-upload-area {
+  border: 2px dashed var(--border-color);
+  border-radius: 8px;
+  padding: 2rem;
+  text-align: center;
+  background-color: var(--card-bg-hover);
+}
+
+.file-upload-area:hover {
+  border-color: var(--accent-blue);
+}
+
+/* Status badges */
+.status-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.status-completed {
+  background-color: rgba(74, 222, 128, 0.2);
+  color: var(--positive);
+}
+
+.status-error {
+  background-color: rgba(248, 113, 113, 0.2);
+  color: var(--negative);
+}
+
+.status-pending {
+  background-color: rgba(250, 204, 21, 0.2);
+  color: #facc15;
+}
+
+/* Additional utility classes */
+.bg-white {
+  background-color: var(--card-bg) !important;
+}
+
+.bg-white\/95 {
+  background-color: var(--card-bg) !important;
+}
+
+.text-white {
+  color: var(--text-primary) !important;
+}
+
+.text-gray-500 {
+  color: var(--text-muted) !important;
+}
+
+.border-gray-200 {
+  border-color: var(--border-color) !important;
+}
+
+/* Direct targeting for specific form elements */
+select,
+select[id*="account"],
+select[id*="month"],
+select[name*="account"],
+select[name*="month"],
+input[role="combobox"],
+[placeholder*="Select"],
+[id*="select"],
+[class*="select"],
+[role="listbox"],
+/* Force override for any dropdowns in the transaction page */
+div:has(> span:has(+ svg)) {
+  background-color: white !important;
+  border-color: #e2e8f0 !important;
+  color: #334155 !important;
+  border-radius: 6px !important;
+}
+
+/* Force light background on any dropdown menus */
+[role="menu"],
+[role="menuitem"],
+[role="option"],
+[role="presentation"],
+[class*="dropdown"],
+[id*="dropdown"],
+[class*="menu"] {
+  background-color: white !important;
+  color: #334155 !important;
+}
+

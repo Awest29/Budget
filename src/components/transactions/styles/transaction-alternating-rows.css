@@ -1,0 +1,73 @@
+/* Alternating row colors for the transaction table */
+
+/* Table header row (very light blue-gray) */
+.table-container thead tr {
+  background-color: #f8fafc !important;
+}
+
+/* Remove default very light gray backgrounds */
+.table-container tbody tr {
+  background-color: white !important;
+}
+
+/* Apply the very light blue-gray color to even rows (starting with 0) */
+.table-container tbody tr:nth-of-type(even) {
+  background-color: #f8fafc !important;
+}
+
+/* Enhanced hover effect */
+.table-container tbody tr:hover {
+  background-color: #f0f0f0 !important; /* Slightly darker gray but still light */
+}
+
+/* Make sure the total row stands out but is not too dark */
+.table-container tfoot tr.total-row {
+  background-color: #eff6ff !important; /* Light blue */
+  border-top: 2px solid #e2e8f0;
+  color: #000000 !important;
+  font-weight: 600 !important;
+}
+
+/* Ensure the focus is on the content */
+.table-container td, 
+.table-container th {
+  border-bottom: 1px solid #f1f5f9 !important;
+  padding: 0.75rem 1rem !important;
+}
+
+/* Better styling for the expense/income values - with higher contrast */
+td.expense-value, 
+.expense-value,
+td[class*="expense"] {
+  color: #b91c1c !important; /* Dark red for better contrast */
+  font-weight: 600;
+}
+
+td.income-value, 
+.income-value,
+td[class*="income"] {
+  color: #047857 !important; /* Dark emerald green for better contrast */
+  font-weight: 600;
+}
+
+/* Improved selected state for dropdowns */
+select:focus,
+.form-control:focus {
+  border-color: #60a5fa !important; /* Light blue */
+  box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.2) !important;
+  outline: none !important;
+}
+
+/* Make the dropdown options more readable */
+select option {
+  background-color: white !important;
+  color: #334155 !important;
+  padding: 8px !important;
+}
+
+/* Style the search input consistently */
+input[placeholder*="Search"] {
+  background-color: white !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+}

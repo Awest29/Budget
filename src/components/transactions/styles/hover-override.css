@@ -1,0 +1,37 @@
+/* Override hover styles with highest specificity */
+
+/* Super specific hover effect to ensure it takes precedence */
+html body .table-container table tbody tr:hover,
+html body .table-container table tbody tr:hover td,
+html body .table-container tbody tr:hover,
+html body table tbody tr:hover,
+html body tr:hover td,
+html body tbody tr:hover,
+tr:hover,
+tr:hover td,
+.table-container tbody tr:hover,
+.table-container tr:hover td,
+table tbody tr:hover,
+tbody tr:hover,
+[class*="table"] tbody tr:hover {
+  background-color: #f0f0f0 !important; /* Slightly darker gray but still light */
+  transition: background-color 0.15s ease-in-out !important;
+}
+
+/* Also ensure alternating rows maintain contrast */
+html body .table-container table tbody tr:nth-of-type(even):hover,
+.table-container tbody tr:nth-of-type(even):hover {
+  background-color: #e8e8e8 !important; /* Slightly darker than #f0f0f0 for even rows */
+}
+
+/* Target any elements with inline style hover effects */
+[style*="background-color"][style*="hover"],
+[style*="background:"][style*="hover"] {
+  background-color: #f0f0f0 !important;
+}
+
+/* Ensure the top dark row is also fixed when hovered */
+.table-container table tbody tr:first-child:hover,
+.table-container tbody tr:first-child:hover {
+  background-color: #f0f0f0 !important;
+}

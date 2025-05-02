@@ -1,0 +1,90 @@
+/* Target only dialog overlays with more specific selectors */
+[role="dialog"] ~ div[role="presentation"],
+[class*="DialogContent"] ~ div[role="presentation"],
+div[data-state="open"][role="presentation"][id^="radix-"],
+div[role="presentation"][aria-hidden="true"] {
+  background-color: transparent !important;
+  opacity: 0.1 !important; /* Very slight opacity instead of completely hidden */
+}
+
+/* Avoid targeting Select dropdowns by using dialog-specific attributes */
+div[role="dialog"] + div[role="presentation"]:not([id*="select"]),
+div[role="dialog"] ~ div[aria-hidden="true"]:not([id*="select"]) {
+  background-color: transparent !important;
+  opacity: 0.1 !important;
+}
+
+/* Make sure we don't affect popper content used by dropdowns */
+div[data-radix-popper-content-wrapper][style*="top: "] {
+  /* Don't hide dropdown popper content */
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Add a subtle shadow to make dialog stand out without dimming background */
+.dialog-edit-content,
+[role="dialog"] [data-radix-popper-content-wrapper] div[role="dialog"],
+[data-radix-dialog-content],
+[class*="DialogContent"] {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15) !important;
+  border: 1px solid #e2e8f0 !important;
+  background-color: white !important;
+}
+
+/* Target input elements inside dialog */
+[role="dialog"] input,
+[class*="DialogContent"] input,
+[data-radix-dialog-content] input,
+.dialog-edit-content input {
+  background-color: white !important;
+  border: 1px solid #e2e8f0 !important;
+  color: #000000 !important;
+  padding: 8px 12px !important;
+  border-radius: 4px !important;
+  margin-bottom: 16px !important;
+  box-shadow: none !important;
+  width: 100% !important;
+}
+
+/* Target input fields by their id */
+#categoryName,
+#subheaderName {
+  background-color: white !important;
+  color: #000000 !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+/* Target the dialog buttons */
+[role="dialog"] button,
+[class*="DialogContent"] button,
+.dialog-edit-content button {
+  border-radius: 4px !important;
+  padding: 8px 16px !important;
+  font-weight: 500 !important;
+}
+
+/* Target dialog title */
+[role="dialog"] [class*="DialogTitle"],
+[class*="DialogTitle"],
+.dialog-edit-content [class*="DialogTitle"] {
+  color: #000000 !important;
+  font-weight: 600 !important;
+}
+
+/* Extra overrides for any potential dark styles */
+[role="dialog"] label,
+[class*="DialogContent"] label,
+.dialog-edit-content label {
+  color: #000000 !important;
+  font-weight: 500 !important;
+}
+
+/* Even more aggressive targeting of input fields */
+[role="dialog"] div.space-y-2 input,
+[role="dialog"] div.mt-4 input,
+[role="dialog"] div.space-y-4 input {
+  background-color: white !important;
+  border: 1px solid #e2e8f0 !important;
+  color: #000000 !important;
+}

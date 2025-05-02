@@ -1,0 +1,453 @@
+/* Light Theme - A holistic approach for consistent styling across all pages */
+
+/* 
+This light theme replaces various individual fix files:
+- person-analysis-fix.css
+- transaction-input-fix.css
+- dropdown-styling-fix.css
+
+The goal is to provide a single, consistent light theme across all pages.
+*/
+
+/* Override the root variables with light theme colors */
+:root {
+  /* Base colors - light theme */
+  --background-color: white;      /* Page background */
+  --card-bg: white;               /* Card background */
+  --card-bg-hover: #f8fafc;       /* Card hover background */
+  --text-primary: #334155;        /* Primary text (slate-700) */
+  --text-secondary: #64748b;      /* Secondary text (slate-500) */
+  --text-muted: #94a3b8;          /* Muted text color (slate-400) */
+  --accent-blue: #3b82f6;         /* Accent blue */
+  --accent-blue-hover: #60a5fa;   /* Lighter blue for hover */
+  --border-color: #e2e8f0;        /* Border color (slate-200) */
+  --positive: #10b981;            /* Green for positive values */
+  --negative: #ef4444;            /* Red for negative values */
+  --table-header-bg: #f8fafc;     /* Table header background (slate-50) */
+  --table-row-hover: #f1f5f9;     /* Table row hover (slate-100) */
+  --table-separator: #e2e8f0;     /* Table separator (slate-200) */
+  --button-primary: #3b82f6;      /* Primary button */
+  --button-primary-hover: #60a5fa; /* Primary button hover */
+}
+
+/* ===== GLOBAL STYLES ===== */
+
+/* Background styling */
+body {
+  background-color: var(--background-color) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Force background for min-height containers */
+.min-h-screen, 
+div[style*="background: #334155"],
+div[style*="background: rgb(51, 65, 85)"],
+div[style*="background:#334155"],
+[class*="budget-container"],
+[class*="transactions-container"],
+[class*="person-analysis"] {
+  background-color: var(--background-color) !important;
+}
+
+/* App container */
+.app-container {
+  padding: 1.5rem;
+  color: var(--text-primary) !important;
+}
+
+/* Content card styling */
+.content-card,
+.card {
+  background-color: var(--card-bg) !important;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+  padding: 1.5rem 2rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid var(--border-color) !important;
+  width: 100%;
+  color: var(--text-primary) !important;
+}
+
+/* Title styling */
+.page-title,
+.card-title,
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text-primary) !important;
+}
+
+.page-subtitle,
+.card-subtitle {
+  color: var(--text-secondary) !important;
+}
+
+/* ===== FORM ELEMENTS ===== */
+
+/* Input styling */
+input[type="text"],
+input[type="number"],
+input[type="email"],
+input[type="password"],
+input[type="search"],
+textarea {
+  background-color: white !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-primary) !important;
+  border-radius: 6px !important;
+}
+
+input::placeholder {
+  color: var(--text-muted) !important;
+}
+
+/* Search fields */
+input[placeholder*="Search"],
+[class*="search-input"],
+.form-control[placeholder*="Search"] {
+  background-color: white !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-primary) !important;
+  border-radius: 6px !important;
+}
+
+/* ===== DROPDOWN / SELECT STYLING ===== */
+
+/* Select component styling */
+select,
+[role="combobox"],
+[class*="select-trigger"],
+[class*="Select"],
+.form-control,
+[class*="SelectTrigger"] {
+  background-color: white !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-primary) !important;
+  border-radius: 6px !important;
+}
+
+/* Hover state for selects */
+select:hover,
+[role="combobox"]:hover,
+[class*="select-trigger"]:hover,
+[class*="Select"]:hover,
+.form-control:hover,
+[class*="SelectTrigger"]:hover {
+  border-color: #cbd5e1 !important;
+}
+
+/* Focus state for selects */
+select:focus,
+[role="combobox"]:focus,
+[class*="select-trigger"]:focus,
+[class*="Select"]:focus,
+.form-control:focus,
+[class*="SelectTrigger"]:focus {
+  border-color: var(--accent-blue) !important;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2) !important;
+  outline: none !important;
+}
+
+/* Dropdown content */
+[class*="SelectContent"],
+.select-content,
+.dropdown-content,
+[role="listbox"],
+[role="menu"] {
+  background-color: white !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-primary) !important;
+  border-radius: 6px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Dropdown items */
+[class*="SelectItem"],
+.select-item,
+.dropdown-item,
+[role="option"],
+[role="menuitem"] {
+  color: var(--text-primary) !important;
+}
+
+/* Dropdown item hover */
+[class*="SelectItem"]:hover,
+.select-item:hover,
+.dropdown-item:hover,
+[role="option"]:hover,
+[role="menuitem"]:hover {
+  background-color: var(--table-row-hover) !important;
+}
+
+/* Selected dropdown item */
+[class*="SelectItem"][data-highlighted],
+[class*="SelectItem"][data-state="checked"],
+.select-item[data-selected="true"],
+[role="option"][aria-selected="true"] {
+  background-color: #eff6ff !important;
+  color: var(--accent-blue) !important;
+  font-weight: 500 !important;
+}
+
+/* All Radix UI select content and related components */
+[data-radix-select-content],
+[data-radix-dropdown-content],
+[data-radix-popper-content-wrapper] {
+  background-color: white !important;
+  color: var(--text-primary) !important;
+  border-color: var(--border-color) !important;
+}
+
+/* ===== TABLE STYLING ===== */
+
+/* Table container */
+.table-container {
+  background-color: white !important;
+  border-color: var(--border-color) !important;
+  border-radius: 8px !important;
+}
+
+/* Table */
+table {
+  background-color: white !important;
+  border-color: var(--border-color) !important;
+}
+
+/* Table headers */
+th, thead tr, thead td, [class*="table-header"] {
+  background-color: var(--table-header-bg) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--border-color) !important;
+  font-weight: 600 !important;
+}
+
+/* Table cells */
+td, tbody tr, tbody td {
+  color: var(--text-primary) !important;
+  border-color: var(--table-separator) !important;
+  background-color: transparent !important;
+}
+
+/* Table row hover */
+tr:hover td, tbody tr:hover {
+  background-color: var(--table-row-hover) !important;
+}
+
+/* Category rows */
+.category-row, tr[class*="category"] {
+  background-color: #f8fafc !important;
+}
+
+/* Subcategory rows */
+.subcategory-row, tr[class*="subcategory"] {
+  background-color: white !important;
+}
+
+/* Total/Summary rows */
+.total-row, tr[class*="total"], tr[class*="summary"] {
+  background-color: #f1f5f9 !important;
+  font-weight: 600 !important;
+}
+
+/* Fix Personal Analysis page's specific elements */
+.person-analysis-page [style*="background"],
+.min-h-screen[style*="background"],
+.person-analysis-container,
+div[style*="background: #334155"] {
+  background-color: white !important;
+}
+
+/* Fix dropdown menus in the Personal Analysis page */
+.person-analysis-page .SelectContent,
+.person-analysis-page [class*="SelectContent"],
+.person-analysis-page select,
+.person-analysis-page [style*="background"] select,
+[id*="month"],
+[data-radix-select-content],
+[data-radix-menu-content],
+[data-radix-dropdown-content] {
+  background-color: white !important;
+  color: #334155 !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Specifically target the darkened month dropdown */
+div[style*="background"] .SelectContent,
+div[role="menu"],
+.person-analysis-page div[style*="background"] select option {
+  background-color: white !important;
+  color: #334155 !important;
+}
+
+/* Style the rows in spending analysis similar to Budget Analysis */
+tr[data-type="income"],
+.category-row td.category-name {
+  background-color: rgba(226, 232, 240, 0.3) !important;
+  font-weight: 600 !important;
+}
+
+/* Collapsible rows in spending analysis */
+.subcategory-row,
+.subcategory-row td {
+  background-color: white !important;
+}
+
+/* Total rows */
+.total-row,
+.net-income-row {
+  background-color: #f1f5f9 !important;
+  font-weight: 600 !important;
+}
+
+/* Force light background for select dropdown list */
+.SelectTrigger option,
+select option,
+select optgroup {
+  background-color: white !important;
+  color: #334155 !important;
+}
+
+/* Target any elements with style attribute containing background */
+[style*="background-color"],
+[style*="background:"] {
+  background-color: white !important;
+  color: #334155 !important;
+}
+
+/* ===== AGGRESSIVE OVERRIDES FOR DROPDOWNS ===== */
+
+/* Aggressive override for month dropdown in Personal Analysis */
+.person-analysis-page select,
+.min-h-screen[style*="background"] select,
+div[style*="background"] select,
+option,
+listitem,
+div[style*="background: #334155"] select option,
+div[style*="background"] option,
+select > option,
+select[value] option,
+.SelectContent option,
+[class*="SelectTrigger"] option {
+  background-color: white !important;
+  color: #334155 !important;
+  border-color: #e2e8f0 !important;
+}
+
+/* Additional forced options for month dropdown list */
+option[value="January"],
+option[value="February"],
+option[value="March"],
+option[value="April"],
+option[value="May"],
+option[value="June"],
+option[value="July"],
+option[value="August"],
+option[value="September"],
+option[value="October"],
+option[value="November"],
+option[value="December"] {
+  background-color: white !important;
+  color: #334155 !important;
+}
+
+/* Target the select element directly */
+select,
+select[name],
+select[id],
+.min-h-screen select,
+.app-container select,
+.content-card select {
+  background-color: white !important;
+  color: #334155 !important;
+  border-color: #e2e8f0 !important;
+  border-radius: 6px !important;
+}
+
+/* Force light styling for menu items (for Firefox) */
+option,
+optgroup {
+  background-color: white !important;
+  color: #334155 !important;
+}
+
+/* ===== ICONS AND BADGES ===== */
+
+/* Icon colors */
+svg[class*="lucide"],
+[class*="icon"] {
+  color: var(--text-secondary) !important;
+}
+
+/* Badge styling */
+.badge,
+[class*="Badge"] {
+  background-color: #f1f5f9 !important;
+  color: var(--text-primary) !important;
+}
+
+/* Specific badge variants */
+.badge-secondary,
+[class*="Badge"][data-variant="secondary"],
+.badge-outline,
+[class*="Badge"][data-variant="outline"] {
+  background-color: rgba(59, 130, 246, 0.1) !important;
+  color: var(--accent-blue) !important;
+}
+
+/* ===== TABLE ROW STYLING ===== */
+
+/* Style the row types consistently */
+tr.category-row,
+tr[data-type="income"],
+tr.income,
+tr.Income,
+tr:has(td:contains("Income")),
+div:has(> table) tr:has(td.category-name:contains("Income")),
+div:has(> table) tr:has(td:first-child:contains("Income")),
+.person-analysis-page tr:has(td:first-child:contains("Income")),
+.person-analysis-page tr:has(td:contains("Fixed")),
+.person-analysis-page tr:has(td:contains("Variable")) {
+  background-color: #f8fafc !important;
+}
+
+/* Style the fixed costs rows */
+tr.fixed,
+tr[data-type="fixed"],
+tr:has(td:contains("Fixed")),
+div:has(> table) tr:has(td:first-child:contains("Fixed")),
+div:has(> table) tr:has(td.category-name:contains("Fixed")),
+.person-analysis-page tr:has(td:first-child:contains("Fixed")) {
+  background-color: #e6efff !important;
+}
+
+/* Style the totals rows */
+tr.total,
+tr.Total,
+tr.total-row,
+.person-analysis-page tr:has(td:first-child:contains("Total")),
+.person-analysis-page tr:has(td:first-child:contains("Net")),
+div:has(> table) tr:has(td:first-child:contains("Net Total")) {
+  background-color: #dcfce7 !important;
+  font-weight: 600 !important;
+}
+
+/* Style table headers consistently */
+table th,
+thead tr,
+.table-header,
+tr.header,
+div:has(> table) tr:first-child {
+  background-color: white !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+  font-weight: 600 !important;
+  color: #334155 !important;
+}
+
+/* ===== UTILITY CLASSES ===== */
+
+/* Force light mode for any remaining elements */
+.dark-mode-element,
+.dark-background,
+[class*="dark"] {
+  background-color: white !important;
+  color: var(--text-primary) !important;
+}

@@ -1,0 +1,80 @@
+/* Extreme compact styling for budget table */
+
+/* Ultra-compact table styling */
+.budget-table {
+  min-width: 100% !important;
+  width: 100% !important;
+  table-layout: fixed !important;
+  font-size: 0.8rem !important; /* Slightly larger than before but still compact */
+  border-collapse: collapse !important;
+}
+
+/* Make cell padding minimal */
+.budget-table th,
+.budget-table td {
+  padding: 3px 3px !important; /* Extremely minimal padding */
+  font-size: 0.75rem !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+/* Column widths optimized for 12 months with 3-letter abbreviations */
+.budget-table th:first-child {
+  width: 15% !important;
+  min-width: 130px !important;
+}
+
+.budget-table th:not(:first-child) {
+  width: 7% !important;
+  min-width: 65px !important;
+}
+
+/* Container should allow scrolling and full width */
+.table-container {
+  overflow-x: auto !important;
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+/* Make table fit into viewport width */
+.card-content {
+  padding: 0 !important;
+}
+
+.budget-card {
+  padding: 1rem 0.5rem !important;
+}
+
+/* Fix number alignment */
+.budget-cell-month {
+  text-align: right !important;
+  padding-right: 4px !important;
+}
+
+/* Make chevrons smaller */
+.chevron-icon {
+  transform: scale(0.8);
+}
+
+/* Thin borders to maximize space */
+.budget-table td,
+.budget-table th {
+  border: 1px solid #e2e8f0 !important;
+}
+
+/* Ensure border between Extraordinary Costs and Net Income rows */
+.net-income-row td {
+  border-top: 2px solid #94a3b8 !important;
+}
+
+/* Make sure edit/delete icons are smaller */
+.cell-actions svg {
+  width: 14px !important;
+  height: 14px !important;
+}
+
+/* Make all icons smaller */
+svg {
+  transform: scale(0.8);
+}

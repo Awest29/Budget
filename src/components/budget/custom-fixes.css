@@ -1,0 +1,80 @@
+/* Custom fixes for specific issues */
+
+/* Ensure all months are visible in the table */
+.budget-table {
+  min-width: 1350px !important; /* Increased width to ensure October fits */
+  width: 100%;
+  table-layout: fixed;
+}
+
+/* Make columns more compact */
+.budget-table th:first-child {
+  width: 18%; /* Reduced from 20% */
+  min-width: 160px; /* Reduced from 180px */
+}
+
+.budget-table th:not(:first-child) {
+  width: 6%;
+  max-width: 90px;
+}
+
+/* Ensure the container allows scrolling if needed */
+.table-container {
+  overflow-x: auto;
+  width: 100%;
+  padding-bottom: 15px; /* Add padding to ensure scrollbar is visible */
+}
+
+/* Add border between Extraordinary Costs and Net Income */
+.net-income-row,
+.net-income-row td {
+  border-top: 2px solid #94a3b8 !important;
+}
+
+/* Ensure net income row stands out */
+.net-income-row td {
+  font-weight: 700 !important;
+  font-size: 1.05rem;
+  background-color: #f8fafc !important;
+}
+
+/* More efficient use of horizontal space */
+.budget-table th, 
+.budget-table td {
+  padding: 6px 6px; /* Further reduced padding */
+  white-space: nowrap;
+  font-size: 0.95rem; /* Slightly smaller font size */
+}
+
+/* Fix border display */
+.budget-table {
+  border-collapse: collapse;
+}
+
+.budget-table th,
+.budget-table td {
+  border: 1px solid #cbd5e1;
+}
+
+/* Ensure the borders between rows are visible */
+.budget-table tr {
+  border-bottom: 1px solid #cbd5e1;
+}
+
+/* Fix for the missing border above Net Income row */
+.budget-table tr.total-row,
+.budget-table tr.net-income-row,
+.budget-table tr.has-border {
+  border-top: 2px solid #94a3b8 !important;
+}
+
+/* Ensure all cells have borders */
+.budget-table td, 
+.budget-table th {
+  border: 1px solid #cbd5e1 !important;
+}
+
+/* Add border to all rows to ensure gaps don't appear */
+.budget-table tr {
+  border-bottom: 1px solid #cbd5e1 !important;
+}

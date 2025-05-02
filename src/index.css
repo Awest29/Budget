@@ -1,0 +1,262 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Import light theme */
+@import './light-theme-fixed.css';
+
+/* Direct fix for dropdowns */
+@import './dropdown-direct-fix.css';
+
+/* Import overrides for dark backgrounds */
+@import './components/budget/override-dark-backgrounds.css';
+@import './components/budget/direct-override.css';
+@import './components/budget/custom-fixes.css';
+@import './components/budget/extreme-compact.css'; /* Ultra-compact styling */
+@import './components/budget/hover-icons.css'; /* Show icons only on hover */
+@import './components/budget/alternating-rows.css'; /* Alternating row colors */
+
+/* Background styling */
+body {
+  background: #334155;  /* Dark blue-gray (slate-800) */
+}
+
+/* Hover utility */
+.hover\:bg-transparent:hover {
+  background-color: transparent !important;
+}
+
+/* Global card styling for all pages */
+.app-container {
+  padding: 1.5rem;
+}
+
+.content-card {
+  background-color: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  padding: 1.5rem 2rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid #e2e8f0;
+  width: 100%;
+}
+
+/* Title styling */
+.page-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 0.5rem;
+}
+
+.page-subtitle {
+  color: #6b7280;
+  font-size: 0.95rem;
+  margin-bottom: 1.25rem;
+}
+
+/* Button styling */
+.primary-button {
+  background-color: #2563eb;
+  color: white;
+  font-weight: 500;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.primary-button:hover {
+  background-color: #1d4ed8;
+}
+
+/* Table container with horizontal scrolling */
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  max-width: 100%;
+}
+
+/* Value styling */
+.negative-value {
+  color: #dc2626 !important;
+}
+
+.positive-value {
+  color: #059669 !important;
+}
+
+/* Budget specific styling */
+.budget-card {
+  background-color: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  padding: 1.75rem 2rem;
+  margin: 1.5rem;
+  border: 1px solid #e2e8f0;
+  width: calc(100% - 3rem);
+}
+
+.budget-header {
+  margin-bottom: 2rem;
+}
+
+.budget-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 0.5rem;
+}
+
+.budget-subtitle {
+  color: #6b7280;
+  font-size: 0.95rem;
+  margin-bottom: 1.25rem;
+}
+
+.financial-overview-btn {
+  background-color: #2563eb;
+  color: white;
+  font-weight: 500;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.financial-overview-btn:hover {
+  background-color: #1d4ed8;
+}
+
+.budget-table {
+  width: auto;
+  min-width: 100%;
+}
+
+/* Styling for categories */
+.category-row:hover td {
+  background-color: rgba(37, 99, 235, 0.05);
+}
+
+.net-income-row {
+  background-color: #f8fafc;
+  border-top: 2px solid #94a3b8;
+}
+
+.net-income-row td {
+  border-top: 2px solid #94a3b8;
+  font-weight: 700;
+}
+
+.chevron-icon {
+  display: inline-block;
+  margin-right: 8px;
+}
+
+.chevron-down {
+  transform: rotate(90deg);
+}
+
+/* Enhanced Budget Warning Styles */
+.bg-amber-50 {
+  background-color: #eff6ff;
+}
+
+.bg-white\/50 {
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.bg-white\/40 {
+  background-color: rgba(255, 255, 255, 0.4);
+}
+
+.bg-white\/60 {
+  background-color: rgba(255, 255, 255, 0.6);
+}
+
+.bg-green-100 {
+  background-color: #dcfce7;
+}
+
+.bg-red-100 {
+  background-color: #fee2e2;
+}
+
+.bg-red-400 {
+  background-color: #f87171;
+}
+
+.bg-blue-400 {
+  background-color: #60a5fa;
+}
+
+.border-amber-200 {
+  border-color: #bfdbfe;
+}
+
+.border-amber-100 {
+  border-color: #dbeafe;
+}
+
+.text-amber-800 {
+  color: #1e40af;
+}
+
+.text-amber-700 {
+  color: #2563eb;
+}
+
+.text-amber-500 {
+  color: #3b82f6;
+}
+
+.text-green-600 {
+  color: #059669;
+}
+
+.text-blue-600 {
+  color: #2563eb;
+}
+
+.text-blue-800 {
+  color: #1e40af;
+}
+
+.hover\:text-blue-800:hover {
+  color: #1e40af;
+}
+
+.hover\:bg-white\/80:hover {
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+.transition-colors {
+  transition-property: color, background-color, border-color;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+.shadow-sm {
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.flex-shrink-0 {
+  flex-shrink: 0;
+}
+
+.brightness-95 {
+  filter: brightness(0.95);
+}
+
+.hover\:brightness-95:hover {
+  filter: brightness(0.95);
+}

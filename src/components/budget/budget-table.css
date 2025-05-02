@@ -1,0 +1,283 @@
+/* src/components/budget/budget-table.css */
+
+/* Budget table styling for improved readability */
+.budget-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  table-layout: fixed; /* Ensure equal column widths */
+  min-width: 1200px; /* Minimum width to ensure all columns are visible */
+}
+
+.budget-table th, 
+.budget-table td {
+  padding: 10px 12px; /* Reduced padding */
+  border: 1px solid #cbd5e1; /* Darker border */
+  color: #000000; /* BLACK text color for everything */
+  font-weight: 500;
+}
+
+.budget-table th {
+  background-color: #e2e8f0; /* Darker header background */
+  font-weight: 700;
+  color: #000000; /* BLACK text for headers */
+  text-align: center;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+}
+
+.budget-table th:first-child {
+  text-align: left;
+  min-width: 180px;
+  width: 20%; /* Make first column wider */
+}
+
+/* Make month columns narrower to fit all months */
+.budget-table th:not(:first-child):not(:last-child) {
+  width: 7%; /* Narrower column width for months */
+}
+
+/* Ensure the last column (Total) has appropriate width */
+.budget-table th:last-child {
+  width: 8%;
+}
+
+.budget-table td {
+  vertical-align: middle;
+  background-color: #ffffff; /* Pure white background */
+}
+
+.budget-cell-month {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-family: monospace;
+  font-size: 1.05rem; /* Slightly larger for better readability */
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  font-weight: 600;
+}
+
+.income-value {
+  color: #000000; /* BLACK for income */
+  font-weight: 700;
+  background-color: #f0fdf4; /* Light green background */
+}
+
+.expense-value {
+  color: #000000; /* BLACK for expense */
+  font-weight: 700;
+  background-color: #fef2f2; /* Light red background */
+}
+
+.category-row {
+  background-color: #dbeafe; /* Darker blue background */
+  cursor: pointer;
+}
+
+.category-row:hover {
+  background-color: #e0f2fe; /* Lighter blue on hover */
+}
+
+.category-row td {
+  font-weight: 700;
+  background-color: #dbeafe; /* Match row background */
+  color: #000000; /* BLACK text */
+}
+
+.category-name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.subcategory-row td {
+  background-color: #f8fafc; /* Very light background */
+  padding-left: 2rem; /* Indent subcategories */
+}
+
+.subcategory-row:hover td {
+  background-color: #f8fafc; /* Very light gray on hover */
+}
+
+.subcategory-name {
+  font-weight: 600;
+  padding-left: 1rem;
+}
+
+.total-row {
+  background-color: #f1f5f9; /* Distinctive background */
+}
+
+.total-row td {
+  font-weight: 800;
+  font-size: 1.05rem;
+  background-color: #f1f5f9;
+  border-top: 2px solid #94a3b8; /* Thicker top border */
+  border-bottom: 2px solid #94a3b8; /* Thicker bottom border */
+}
+
+.total-cell {
+  background-color: #f1f5f9;
+  font-weight: 800;
+  border-left: 2px solid #94a3b8; /* Thicker left border */
+}
+
+/* Alternate row colors for better readability */
+.budget-table tbody tr:nth-child(odd):not(.category-row):not(.total-row) td {
+  background-color: #ffffff;
+}
+
+.budget-table tbody tr:nth-child(even):not(.category-row):not(.total-row) td {
+  background-color: #f8fafc;
+}
+
+/* More specific targeting for the hover effect on row backgrounds */
+.budget-table tr:hover td,
+.budget-table tbody tr:hover td {
+  background-color: rgba(59, 130, 246, 0.02) !important;
+}
+
+/* Additional override for specific dark background rows like in the screenshot */
+tbody tr[style*="background-color: rgb(51, 65, 85)"],
+tbody tr[style*="background-color: rgb(71, 85, 105)"],
+tbody tr[style*="background-color:#334155"],
+tbody tr[style*="background-color: #334155"],
+tbody tr[style*="background-color:#475569"],
+tbody tr[style*="background-color: #475569"] {
+  background-color: #f8fafc !important;
+}
+
+tbody tr[style*="background-color: rgb(51, 65, 85)"] td,
+tbody tr[style*="background-color: rgb(71, 85, 105)"] td,
+tbody tr[style*="background-color:#334155"] td,
+tbody tr[style*="background-color: #334155"] td,
+tbody tr[style*="background-color:#475569"] td,
+tbody tr[style*="background-color: #475569"] td {
+  background-color: #f8fafc !important;
+  color: #000000 !important;
+}
+
+/* Lighter hover effect for these specific rows */
+tbody tr[style*="background-color: rgb(51, 65, 85)"]:hover td,
+tbody tr[style*="background-color: rgb(71, 85, 105)"]:hover td,
+tbody tr[style*="background-color:#334155"]:hover td,
+tbody tr[style*="background-color: #334155"]:hover td,
+tbody tr[style*="background-color:#475569"]:hover td,
+tbody tr[style*="background-color: #475569"]:hover td {
+  background-color: #f1f5f9 !important;
+  color: #000000 !important;
+}
+
+/* Improve borders for better visual separation */
+.budget-table th {
+  border-bottom: 2px solid #94a3b8;
+}
+
+.budget-table td {
+  border-bottom: 1px solid #cbd5e1;
+  border-right: 1px solid #cbd5e1;
+}
+
+/* Sub-items in expandable sections */
+.item-row td {
+  padding-left: 3rem; /* Even more indentation */
+  font-weight: 500; /* Less bold than subcategories */
+  background-color: #ffffff !important; /* Force white background */
+}
+
+/* Override for any dark backgrounds */
+.budget-table tr td[style*="background-color"] {
+  background-color: #f8fafc !important; /* Light background */
+}
+
+/* Override for dark background rows */
+.budget-table tr[style*="background"], 
+.budget-table tr.bg-slate-700,
+.budget-table tr.bg-slate-600,
+.budget-table tr.bg-slate-500,
+.budget-table tr.bg-gray-700,
+.budget-table tr.bg-gray-600,
+.budget-table tr.bg-gray-500,
+.budget-table tr.bg-blue-700,
+.budget-table tr.bg-blue-600,
+.budget-table tr.bg-blue-500 {
+  background-color: #f1f5f9 !important;
+}
+
+/* Override dark backgrounds but keep existing styling patterns */
+.budget-table tr.dark-row td,
+.budget-table tr.item-row.dark-row td,
+.budget-table tr[style*="background-color: rgb(51, 65, 85)"] td,
+.budget-table tr[style*="background-color:#475569"] td,
+.budget-table tr[style*="background-color: #475569"] td,
+.budget-table tr[style*="background-color:#334155"] td,
+.budget-table tr[style*="background-color: #334155"] td {
+  background-color: #f8fafc !important;
+  color: #000000 !important;
+}
+
+/* Target specifically dark rows with a more universal approach */
+.budget-table tr[style*="background"] td,
+.budget-table tr.bg-slate-700 td,
+.budget-table tr.bg-slate-600 td,
+.budget-table tr.bg-gray-700 td,
+.budget-table tr.bg-gray-600 td,
+.budget-table tr td[style*="background-color: rgb(51, 65, 85)"],
+.budget-table tr td[style*="background-color: #334155"] {
+  background-color: #f8fafc !important;
+  color: #000000 !important;
+}
+
+/* Global catch-all for any dark background element */
+.budget-table [style*="background-color: #334155"],
+.budget-table [style*="background-color:#334155"],
+.budget-table [style*="background-color: #475569"],
+.budget-table [style*="background-color:#475569"],
+.budget-table [style*="background-color: rgb(51, 65, 85)"],
+.budget-table [style*="background-color: rgb(71, 85, 105)"] {
+  background-color: #f8fafc !important;
+  color: #000000 !important;
+}
+
+/* Special rule for specific rows like Electrical, Water, etc */
+.item-row {
+  background-color: #ffffff !important;
+}
+
+.item-row td {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
+
+.item-row:hover td {
+  background-color: #f9fafb; /* Very subtle hover effect */
+}
+
+/* Expandable indicators */
+.expandable-icon {
+  transition: transform 0.2s ease;
+  color: #000000; /* BLACK color for icon */
+}
+
+.expanded .expandable-icon {
+  transform: rotate(90deg);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .budget-table {
+    font-size: 0.875rem;
+  }
+  
+  .budget-table th, 
+  .budget-table td {
+    padding: 8px 12px;
+  }
+}

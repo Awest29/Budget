@@ -1,0 +1,210 @@
+/* Enhanced dropdown styling for better readability and theme consistency */
+
+/* These styles are specifically for fixing the dark dropdowns seen in the screenshots */
+
+/* Dropdown trigger (the select box itself) */
+[class*="SelectTrigger"],
+.select-trigger,
+select,
+.dropdown-trigger {
+  background-color: #f8fafc !important; /* Light background */
+  border: 1px solid #e2e8f0 !important; /* Light border */
+  color: #334155 !important; /* Dark text for contrast */
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+/* Hover state for trigger */
+[class*="SelectTrigger"]:hover,
+.select-trigger:hover,
+select:hover,
+.dropdown-trigger:hover {
+  background-color: #f1f5f9 !important; /* Slightly darker on hover */
+  border-color: #cbd5e1 !important;
+}
+
+/* Focus state for trigger */
+[class*="SelectTrigger"]:focus,
+.select-trigger:focus,
+select:focus,
+.dropdown-trigger:focus {
+  border-color: #3b82f6 !important; /* Match accent color */
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2) !important; /* Subtle focus ring */
+  outline: none;
+}
+
+/* Dropdown content/menu */
+[class*="SelectContent"],
+.select-content,
+.dropdown-content {
+  background-color: #ffffff !important; /* White background */
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important; /* Subtle shadow */
+  overflow: hidden;
+}
+
+/* Dropdown items */
+[class*="SelectItem"],
+.select-item,
+.dropdown-item,
+select option {
+  color: #334155 !important; /* Dark text */
+  padding: 8px 12px;
+  transition: background-color 0.2s ease;
+}
+
+/* Dropdown item hover */
+[class*="SelectItem"]:hover,
+.select-item:hover,
+.dropdown-item:hover,
+select option:hover {
+  background-color: #f1f5f9 !important; /* Light gray background on hover */
+  color: #1e293b !important; /* Darker text on hover for emphasis */
+}
+
+/* Selected item in dropdown */
+[class*="SelectItem"][data-state="checked"],
+.select-item[data-selected="true"],
+.dropdown-item[data-selected="true"],
+select option:checked {
+  background-color: #eff6ff !important; /* Light blue background for selected item */
+  color: #2563eb !important; /* Blue text for selected item */
+  font-weight: 500;
+}
+
+/* Dropdown icon */
+[class*="SelectIcon"] svg,
+.select-icon svg,
+.dropdown-icon svg {
+  color: #64748b !important; /* Medium gray for icon */
+}
+
+/* Dropdown labels */
+[class*="SelectLabel"],
+.select-label,
+.dropdown-label {
+  color: #64748b !important; /* Medium gray */
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+/* Dropdown separator */
+[class*="SelectSeparator"],
+.select-separator,
+.dropdown-separator {
+  background-color: #e2e8f0 !important; /* Light gray separator */
+}
+
+/* Override Shadcn specific selectors for consistency */
+.SelectItem {
+  color: #334155 !important;
+}
+
+.SelectItem:hover {
+  background-color: #f1f5f9 !important;
+}
+
+.SelectContent {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Month dropdown styling specific for budget analysis page */
+.month-dropdown-list,
+[data-name="April"],
+[data-radix-popper-content-wrapper] {
+  background-color: #ffffff !important;
+  color: #334155 !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+}
+
+.month-dropdown-list div,
+[data-name="April"] div,
+[data-radix-popper-content-wrapper] div {
+  background-color: #ffffff !important;
+  color: #334155 !important;
+}
+
+.month-dropdown-list div:hover,
+[data-name="April"] div:hover,
+[data-radix-popper-content-wrapper] div:hover {
+  background-color: #f1f5f9 !important;
+}
+
+.month-dropdown-list div.selected,
+[data-name="April"] div.selected,
+[data-radix-popper-content-wrapper] [aria-selected="true"] {
+  background-color: #eff6ff !important;
+  color: #2563eb !important;
+}
+
+/* Make sure month dropdown items are always readable */
+[class*="dropdown"] [aria-selected="true"] {
+  background-color: #eff6ff !important;
+  color: #2563eb !important;
+}
+
+/* Some frameworks add month selection as list items */
+ul[class*="month-list"] li,
+ul[class*="dropdown-list"] li,
+ul[class*="select-list"] li {
+  background-color: #ffffff !important;
+  color: #334155 !important;
+}
+
+ul[class*="month-list"] li:hover,
+ul[class*="dropdown-list"] li:hover,
+ul[class*="select-list"] li:hover {
+  background-color: #f1f5f9 !important;
+}
+
+ul[class*="month-list"] li.selected,
+ul[class*="dropdown-list"] li.selected,
+ul[class*="select-list"] li.selected {
+  background-color: #eff6ff !important;
+  color: #2563eb !important;
+}
+
+/* Direct fixes for the Radix dropdown in the screenshots */
+/* This targets the months dropdown specifically */
+[data-radix-select-content],
+[data-radix-menu-content],
+[data-radix-dropdown-content] {
+  background-color: #ffffff !important;
+  color: #334155 !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 6px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+[data-radix-select-viewport],
+[data-radix-menu-viewport],
+[data-radix-dropdown-viewport] {
+  background-color: #ffffff !important;
+}
+
+[data-radix-select-item],
+[data-radix-menu-item],
+[data-radix-dropdown-item] {
+  color: #334155 !important;
+  background-color: transparent !important;
+}
+
+[data-radix-select-item]:hover,
+[data-radix-menu-item]:hover,
+[data-radix-dropdown-item]:hover {
+  background-color: #f1f5f9 !important;
+}
+
+[data-radix-select-item][data-highlighted],
+[data-radix-select-item][data-state="checked"],
+[data-radix-menu-item][data-highlighted],
+[data-radix-dropdown-item][data-highlighted] {
+  background-color: #eff6ff !important;
+  color: #2563eb !important;
+}

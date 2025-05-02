@@ -1,0 +1,53 @@
+/* Global black text override for transaction table */
+
+/* Force black text on all elements */
+.table-container * {
+  color: #000000 !important;
+}
+
+/* Preserve specific colors for expense/income values */
+.expense-value,
+td.expense-value,
+.expense-value *,
+*[class*="expense-value"] {
+  color: #b91c1c !important; /* Dark red */
+}
+
+.income-value,
+td.income-value,
+.income-value *,
+*[class*="income-value"] {
+  color: #047857 !important; /* Dark green */
+}
+
+/* Strengthen table headers */
+.table-container th {
+  color: #000000 !important;
+  font-weight: 600 !important;
+}
+
+/* Make select options black */
+select option,
+.form-control option {
+  color: #000000 !important;
+}
+
+/* Card header text */
+.card-title, 
+.card-subtitle,
+h1, h2, h3, h4, h5, h6 {
+  color: #000000 !important;
+}
+
+/* Search text */
+input[type="text"],
+input[type="search"],
+.form-control[type="text"] {
+  color: #000000 !important;
+}
+
+/* Placeholder text */
+::placeholder {
+  color: #4b5563 !important;
+  opacity: 0.7 !important;
+}

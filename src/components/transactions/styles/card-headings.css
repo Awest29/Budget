@@ -1,0 +1,29 @@
+/* Card heading styles with black text */
+
+/* Card title */
+.card-title {
+  color: #000000 !important;
+  font-weight: 600 !important;
+  font-size: 1.25rem !important;
+}
+
+/* Card subtitle */
+.card-subtitle {
+  color: #000000 !important;
+  font-size: 0.875rem !important;
+  opacity: 0.8 !important;
+}
+
+/* Card header overall */
+.card-header {
+  border-bottom: 1px solid #f1f5f9 !important;
+  padding-bottom: 1rem !important;
+}
+
+/* Override any other heading colors */
+h1, h2, h3, h4, h5, h6,
+.page-title,
+.card-title,
+.heading {
+  color: #000000 !important;
+}

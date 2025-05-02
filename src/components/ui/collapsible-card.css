@@ -1,0 +1,27 @@
+.collapsible-card-header {
+  transition: background-color 0.2s ease;
+}
+
+.collapsible-card-header:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.collapsible-card-header .chevron-icon {
+  transition: transform 0.2s ease;
+}
+
+.collapsible-card-header .chevron-down {
+  transform: rotate(90deg);
+}
+
+.collapsible-card-content {
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.collapsible-card-title {
+  display: flex;
+  align-items: center;
+  font-size: 1.125rem;
+  font-weight: 600;
+}

@@ -1,0 +1,85 @@
+/* Enhanced Transaction List Styling */
+
+/* Transaction list table improvements */
+.table-container {
+  border-radius: 8px !important;
+  overflow: hidden !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Set all text to black */
+.table-container,
+.table-container th,
+.table-container td,
+.table-container tr {
+  color: #000000 !important;
+  font-weight: 400 !important;
+}
+
+/* Enhanced table rows */
+.table-container tr {
+  background-color: white !important;
+  transition: background-color 0.15s ease-in-out;
+}
+
+/* Gentle hover effect */
+.table-container tbody tr:hover {
+  background-color: #f0f0f0 !important; /* Slightly darker gray but still light */
+}
+
+/* Make the table header distinct but lighter */
+.table-container thead tr {
+  background-color: #f8fafc !important; /* Very light blue-gray */
+  border-bottom: 1px solid #f1f5f9 !important;
+}
+
+.table-container th {
+  font-weight: 600 !important;
+  color: #000000 !important; /* Black text for better readability */
+  padding: 0.75rem 1rem !important;
+}
+
+/* Add spacing to cells */
+.table-container td {
+  padding: 0.75rem 1rem !important;
+  border-bottom: 1px solid #f1f5f9 !important;
+}
+
+/* Improve the total row styling */
+.total-row {
+  background-color: #f8fafc !important; /* Very light blue-gray instead of darker */
+  font-weight: 600 !important;
+  border-top: 1px solid #e2e8f0 !important;
+}
+
+/* Enhanced search box styling */
+input[placeholder*="Search transactions..."] {
+  background-color: white !important;
+  border-color: #e2e8f0 !important;
+  padding: 0.6rem 1rem 0.6rem 2.5rem !important; 
+  border-radius: 8px !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08) !important;
+  transition: all 0.2s ease;
+}
+
+input[placeholder*="Search transactions..."]:focus {
+  border-color: #cbd5e1 !important;
+  box-shadow: 0 0 0 3px rgba(203, 213, 225, 0.3) !important;
+  outline: none !important;
+}
+
+/* Improved selected row */
+tr.selected-row, tr.selected-row td {
+  background-color: #eff6ff !important; /* Very light blue */
+}
+
+/* Improved expense/income coloring - darker for better contrast */
+.expense-value {
+  color: #b91c1c !important; /* Red 700 - darker for better contrast */
+  font-weight: 600 !important;
+}
+
+.income-value {
+  color: #047857 !important; /* Emerald 700 - darker for better contrast */
+  font-weight: 600 !important;
+}

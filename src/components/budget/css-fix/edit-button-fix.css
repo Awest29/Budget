@@ -1,0 +1,99 @@
+/* Enhanced CSS to fix edit and delete buttons */
+
+/* Style action icons for proper clickability when visible */
+.action-icon, 
+.delete-icon {
+  cursor: pointer !important;
+  position: relative !important;
+  z-index: 999 !important; /* Very high z-index to ensure clickability */
+  isolation: isolate !important; /* Create a new stacking context */
+}
+
+/* Style cell-actions container for proper display when visible */
+.cell-actions {
+  display: inline-flex !important;
+  z-index: 999 !important;
+  position: relative !important;
+  isolation: isolate !important; /* Create a new stacking context */
+  margin-left: 8px !important;
+  gap: 4px !important;
+}
+
+/* Ensure category name container doesn't interfere with clicks */
+.category-name {
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* Pause row event propagation when hovering over action area */
+.category-name .cell-actions, 
+.category-name .action-icon, 
+.category-name .delete-icon {
+  pointer-events: all !important;
+}
+
+/* Make icons more visible */
+.action-icon {
+  color: #2563eb !important; /* Blue */
+  width: 18px !important;
+  height: 18px !important;
+}
+
+.delete-icon {
+  color: #dc2626 !important; /* Red */
+  width: 18px !important;
+  height: 18px !important;
+}
+
+/* Add a small interactive area around icons for easier clicking */
+.action-icon:after,
+.delete-icon:after {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: -8px;
+  right: -8px;
+  bottom: -8px;
+  z-index: -1;
+}
+
+/* Stop parent elements from capturing clicks */
+.subcategory-row, .item-row {
+  pointer-events: auto;
+}
+
+/* Override any conflicting styles */
+.subcategory-row .category-name,
+.item-row td {
+  pointer-events: auto !important;
+}
+
+/* Ensure row expansions don't block icon clicks */
+tr.expanded .cell-actions {
+  pointer-events: all !important;
+}
+
+/* Fix edit dialog to appear on top of everything */
+.dialog-edit-content {
+  position: fixed !important;
+  z-index: 9999 !important;
+  background-color: white !important;
+}
+
+/* Prevent click events from being captured by parent elements */
+.action-icon *, .delete-icon * {
+  pointer-events: none !important; /* Ensure SVG children don't interfere */
+}
+
+/* Ensure the table rows don't interfere with icon clicks */
+tr {
+  position: relative !important;
+}
+
+/* Make sure the icons are clickable even when the row is expanded */
+tr.expanded .action-icon,
+tr.expanded .delete-icon {
+  pointer-events: all !important;
+  z-index: 1000 !important;
+}

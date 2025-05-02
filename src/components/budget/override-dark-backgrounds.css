@@ -1,0 +1,52 @@
+/* Additional CSS to override dark backgrounds */
+
+/* Target specifically the dark backgrounds we see in the screenshots */
+tr[style*="background-color"], 
+tr[class*="bg-slate"], 
+tr[class*="bg-gray"], 
+tr.subcategory-row {
+  background-color: #f8fafc !important;
+}
+
+tr[style*="background-color"] td, 
+tr[class*="bg-slate"] td, 
+tr[class*="bg-gray"] td, 
+tr.subcategory-row td {
+  background-color: #f8fafc !important;
+  color: #000000 !important;
+}
+
+/* Lighten the hover effect */
+tr[style*="background-color"]:hover, 
+tr[class*="bg-slate"]:hover, 
+tr[class*="bg-gray"]:hover, 
+tr.subcategory-row:hover {
+  background-color: #f1f5f9 !important;
+}
+
+tr[style*="background-color"]:hover td, 
+tr[class*="bg-slate"]:hover td, 
+tr[class*="bg-gray"]:hover td, 
+tr.subcategory-row:hover td {
+  background-color: #f1f5f9 !important;
+  color: #000000 !important;
+}
+
+/* Specific overrides for row backgrounds */
+.budget-table tr[style*="background-color: rgb(51, 65, 85)"],
+.budget-table tr[style*="background-color:#334155"],
+.budget-table tr[style*="background-color: #334155"] {
+  background-color: #f8fafc !important;
+}
+
+.budget-table tr[style*="background-color: rgb(51, 65, 85)"] td,
+.budget-table tr[style*="background-color:#334155"] td,
+.budget-table tr[style*="background-color: #334155"] td {
+  background-color: #f8fafc !important;
+  color: #000000 !important;
+}
+
+/* Override any remaining hover effects */
+.budget-table tr:hover td {
+  background-color: rgba(243, 244, 246, 0.7) !important;
+}

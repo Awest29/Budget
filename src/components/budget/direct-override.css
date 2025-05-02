@@ -1,0 +1,127 @@
+/* Direct overrides for the specific issues seen in screenshots */
+
+/* Target the Mortgage row with dark background */
+.budget-table tr:has(> td:nth-child(1):has(> div:contains("Mortgage"))),
+.budget-table tr:has(> td:nth-child(1):has(> *:contains("Mortgage"))) {
+  background-color: #f8fafc !important;
+}
+
+.budget-table tr:has(> td:nth-child(1):has(> div:contains("Mortgage"))) td,
+.budget-table tr:has(> td:nth-child(1):has(> *:contains("Mortgage"))) td {
+  background-color: #f8fafc !important;
+  color: #000000 !important;
+}
+
+/* Target the Charity row with dark background */
+.budget-table tr:has(> td:nth-child(1):has(> div:contains("Charity"))),
+.budget-table tr:has(> td:nth-child(1):has(> *:contains("Charity"))) {
+  background-color: #f8fafc !important;
+}
+
+.budget-table tr:has(> td:nth-child(1):has(> div:contains("Charity"))) td,
+.budget-table tr:has(> td:nth-child(1):has(> *:contains("Charity"))) td {
+  background-color: #f8fafc !important;
+  color: #000000 !important;
+}
+
+/* Target all rows with dark backgrounds directly with inline style */
+tr[style*="background-color: rgb(51, 65, 85)"],
+tr[style*="background-color:#334155"],
+tr[style="background-color: #334155"] {
+  background-color: #f8fafc !important;
+}
+
+tr[style*="background-color: rgb(51, 65, 85)"] td,
+tr[style*="background-color:#334155"] td,
+tr[style="background-color: #334155"] td {
+  background-color: #f8fafc !important;
+  color: #000000 !important;
+}
+
+/* Direct override for hover effects on these dark rows */
+tr[style*="background-color: rgb(51, 65, 85)"]:hover,
+tr[style*="background-color:#334155"]:hover,
+tr[style="background-color: #334155"]:hover {
+  background-color: #f1f5f9 !important;
+}
+
+tr[style*="background-color: rgb(51, 65, 85)"]:hover td,
+tr[style*="background-color:#334155"]:hover td,
+tr[style="background-color: #334155"]:hover td {
+  background-color: #f1f5f9 !important;
+  color: #000000 !important;
+}
+
+/* JavaScript-based solution to be added into the DOM */
+document.addEventListener('DOMContentLoaded', function() {
+  // Add a style tag with direct overrides
+  const styleTag = document.createElement('style');
+  styleTag.textContent = `
+    /* Direct targeting of dark background rows */
+    tr[style*="background-color: rgb(51, 65, 85)"],
+    tr[style*="background-color:#334155"],
+    tr[style*="background-color: #334155"] {
+      background-color: #f8fafc !important;
+    }
+    
+    tr[style*="background-color: rgb(51, 65, 85)"] td,
+    tr[style*="background-color:#334155"] td,
+    tr[style*="background-color: #334155"] td {
+      background-color: #f8fafc !important;
+      color: #000000 !important;
+    }
+    
+    /* Lighter hover effect */
+    tr[style*="background-color: rgb(51, 65, 85)"]:hover td,
+    tr[style*="background-color:#334155"]:hover td,
+    tr[style*="background-color: #334155"]:hover td {
+      background-color: #f1f5f9 !important;
+      color: #000000 !important;
+    }
+  `;
+  document.head.appendChild(styleTag);
+  
+  // MutationObserver to watch for added rows and apply styles
+  const observer = new MutationObserver(function(mutations) {
+    mutations.forEach(function(mutation) {
+      if (mutation.addedNodes && mutation.addedNodes.length > 0) {
+        // Check for rows with dark backgrounds and override them
+        document.querySelectorAll('tr[style*="background-color: rgb(51, 65, 85)"], tr[style*="background-color:#334155"], tr[style*="background-color: #334155"]').forEach(row => {
+          row.style.backgroundColor = '#f8fafc';
+          Array.from(row.querySelectorAll('td')).forEach(cell => {
+            cell.style.backgroundColor = '#f8fafc';
+            cell.style.color = '#000000';
+          });
+        });
+      }
+    });
+  });
+  
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true
+  });
+});
+
+/* Last resort catch-all for dark background elements */
+* {
+  background-color: transparent !important;
+}
+
+* td {
+  background-color: transparent !important;
+}
+
+tr[style*="background"], tr[class*="bg-slate"], tr[class*="bg-gray"] {
+  background-color: #f8fafc !important;
+}
+
+tr[style*="background"] td, tr[class*="bg-slate"] td, tr[class*="bg-gray"] td {
+  background-color: #f8fafc !important;
+  color: #000000 !important;
+}
+
+tr[style*="background"]:hover td, tr[class*="bg-slate"]:hover td, tr[class*="bg-gray"]:hover td {
+  background-color: #f1f5f9 !important;
+  color: #000000 !important;
+}
