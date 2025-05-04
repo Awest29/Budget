@@ -1,5 +1,3 @@
-// src/components/budget/comparison/ModernBudgetComparisonPage.tsx
-
 import React, { useState, useEffect } from 'react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
@@ -8,7 +6,14 @@ import { ComparisonTable } from './ComparisonTable';
 import { Month, FULL_MONTHS } from '@/types/budget';
 import { BarChart3, TrendingUp, AlertTriangle, ChevronDown, ChevronUp } from 'lucide-react';
 import { ModernCollapsible } from '@/components/ui/ModernCollapsible';
+import { BudgetMetrics } from '../metrics/BudgetMetrics';
+import { getBudgetData } from '@/lib/budgetService';
+import { BudgetCategory } from '@/types/budget';
+import { SpendingTrendsChart } from '../trends/SpendingTrendsChart';
+import { BudgetRecommendations } from '../trends/BudgetRecommendations';
+import { useBudgetAnalysisTransactions } from '@/hooks/budget/useBudgetAnalysisTransactions';
 import './budget-comparison-fix.css';
+import '../trends/spending-trends.css';
 
 interface BudgetAnalysisCardProps {
   title: string;
@@ -59,36 +64,37 @@ export function ModernBudgetComparisonPage({ year }: ModernBudgetComparisonPageP
 
   const [selectedMonth, setSelectedMonth] = useState<Month>(initialMonth);
   const [isYTD, setIsYTD] = useState(false);
-  const [budgetData, setBudgetData] = useState<any[]>([]);
+  const [categories, setCategories] = useState<BudgetCategory[]>([]);
+  const [loading, setLoading] = useState(true);
   
-  // Mock data for the cards - in a real app, this would come from the budget data
-  const summaryCards = [
-    {
-      title: "Total Spending",
-      value: "$4,289",
-      change: "12% from last month",
-      changeType: 'negative' as const,
-      icon: <BarChart3 size={24} />
-    },
-    {
-      title: "Budget Adherence",
-      value: "94%",
-      change: "2% improvement",
-      changeType: 'positive' as const,
-      icon: <TrendingUp size={24} />
-    },
-    {
-      title: "Alert Categories",
-      value: "2 Categories",
-      change: "Over budget",
-      changeType: 'negative' as const,
-      icon: <AlertTriangle size={24} />
+  // Use our new hook to fetch transaction data for the entire year
+  const { transactions, loading: transactionsLoading, error: transactionsError } = useBudgetAnalysisTransactions(year);
+  
+  // Load budget data on component mount and when month/YTD selection changes
+  useEffect(() => {
+    loadCategories();
+    console.log('ModernBudgetComparisonPage: Month or YTD selection changed', { selectedMonth, isYTD });
+  }, [selectedMonth, isYTD]);
+
+  async function loadCategories() {
+    try {
+      setLoading(true);
+      
+      // Load budget categories
+      const enrichedCategories = await getBudgetData();
+      setCategories(enrichedCategories);
+      
+    } catch (error) {
+      console.error('Error loading data:', error);
+    } finally {
+      setLoading(false);
     }
-  ];
+  }
 
   // Handler to receive budget data from ComparisonTable
   const handleBudgetDataUpdate = (data: any[]) => {
-    setBudgetData(data);
+    // Process budget data received from ComparisonTable
+    // For now, we're using our new hook for transactions
   };
 
   return (
@@ -137,19 +143,20 @@ export function ModernBudgetComparisonPage({ year }: ModernBudgetComparisonPageP
             </div>
           </div>
           
-          {/* Stats Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-            {summaryCards.map((card, index) => (
-              <BudgetAnalysisCard 
-                key={index}
-                title={card.title}
-                value={card.value}
-                change={card.change}
-                changeType={card.changeType}
-                icon={card.icon}
-              />
-            ))}
-          </div>
+          {/* Budget Metrics Cards */}
+          {loading ? (
+            <div className="flex justify-center items-center h-32 mb-6">
+              <p>Loading budget data...</p>
+            </div>
+          ) : (
+            <BudgetMetrics
+              categories={categories}
+              year={year}
+              selectedMonth={selectedMonth}
+              isYTD={isYTD}
+              key={`${selectedMonth}-${isYTD}`} // Force re-render when month or YTD changes
+            />
+          )}
           
           {/* Analysis sections */}
           <div className="space-y-6">
@@ -169,37 +176,56 @@ export function ModernBudgetComparisonPage({ year }: ModernBudgetComparisonPageP
             </ModernCollapsible>
             
             <ModernCollapsible 
-              title="Spending Trends"
-              defaultOpen={false}
+              title="Spending Trends (Actual Transactions)"
+              defaultOpen={true}
               className="modern-collapsible"
+              description="This chart shows your actual spending from transactions, while the budget table shows your planned budget amounts."
             >
               <div className="p-4">
-                <p className="text-tertiary mb-4">
-                  Spending trend analysis will be shown here, comparing your monthly spending patterns across different categories.
-                </p>
-                <div className="bg-surface-hover h-64 rounded-lg flex items-center justify-center">
-                  <p className="text-tertiary">Chart placeholder - will display trend data</p>
+                {loading || transactionsLoading ? (
+                  <div className="flex justify-center items-center h-32">
+                    <p>Loading spending trends...</p>
+                  </div>
+                ) : transactionsError ? (
+                  <div className="p-4 bg-destructive-subtle text-destructive rounded">
+                    <p>Error loading transaction data: {transactionsError.message}</p>
+                  </div>
+                ) : (
+                  <SpendingTrendsChart 
+                    categories={categories} 
+                    year={year} 
+                    selectedMonth={selectedMonth}
+                    isYtdMode={isYTD}
+                    transactions={transactions} // Use our transactions from the hook
+                    key={`trends-${selectedMonth}-${transactions.length}`} // Force re-render when data changes
+                  />
+                )}
+                <div className="chart-explanation-note">
+                  <p>
+                    <strong>Note:</strong> This chart shows actual spending from transactions, 
+                    while the budget table above shows planned budget values. 
+                  </p>
+                  <p className="text-sm mt-2">
+                    The discrepancy between chart and table values (such as Travel showing 38,235 in the chart vs. 6,237 in the table)
+                    represents the difference between your planned budget and actual spending.
+                  </p>
                 </div>
               </div>
             </ModernCollapsible>
             
             <ModernCollapsible 
               title="Budget Recommendations"
-              defaultOpen={false}
+              defaultOpen={true}
               className="modern-collapsible"
             >
               <div className="p-4">
-                <div className="space-y-4">
-                  <div className="p-4 bg-warning-surface rounded-lg">
-                    <h4 className="font-medium text-warning mb-2">Dining Out Category</h4>
-                    <p className="text-sm">You've consistently exceeded your dining out budget by 20% for the last 3 months. Consider increasing your budget or finding ways to reduce expenses.</p>
+                {loading ? (
+                  <div className="flex justify-center items-center h-32">
+                    <p>Loading recommendations...</p>
                   </div>
-                  
-                  <div className="p-4 bg-success-surface rounded-lg">
-                    <h4 className="font-medium text-success mb-2">Transportation Category</h4>
-                    <p className="text-sm">You're consistently under budget in transportation. You might be able to reallocate some of this budget to other categories.</p>
-                  </div>
-                </div>
+                ) : (
+                  <BudgetRecommendations categories={categories} />
+                )}
               </div>
             </ModernCollapsible>
           </div>

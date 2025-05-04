@@ -1,0 +1,363 @@
+import React from 'react';
+import './dashboard-cards.css';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { BudgetCategory } from '@/types/budget';
+import { FULL_MONTHS } from '@/types/budget';
+import { ArrowUp, ArrowDown, AlertTriangle, BarChart, TrendingUp } from 'lucide-react';
+
+interface SimpleBudgetMetricCardsProps {
+  categories: BudgetCategory[];
+  year: number;
+  selectedMonth?: string;
+  isYTD?: boolean;
+  onDebugUpdate?: (debugInfo: any) => void;
+}
+
+// Simple 3-letter month abbreviations for data lookup
+const MONTHS = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+
+export function SimpleBudgetMetricCards({ 
+  categories, 
+  year, 
+  selectedMonth, 
+  isYTD = false,
+  onDebugUpdate 
+}: SimpleBudgetMetricCardsProps) {
+  console.log("SimpleBudgetMetricCards: Starting fresh calculation");
+  
+  // Get the month we're analyzing
+  const currentDate = new Date();
+  const systemMonthIndex = currentDate.getMonth();
+  const selectedMonthIndex = selectedMonth 
+    ? FULL_MONTHS.findIndex(m => m.toLowerCase() === selectedMonth.toLowerCase())
+    : systemMonthIndex;
+  const monthIndex = selectedMonthIndex >= 0 ? selectedMonthIndex : systemMonthIndex;
+  const currentMonth = MONTHS[monthIndex];
+  const previousMonth = monthIndex > 0 ? MONTHS[monthIndex - 1] : MONTHS[11];
+  
+  // ----- TOTAL SPENDING CALCULATION -----
+  let totalSpending = 0;
+  let previousSpending = 0;
+  
+  // Calculate total spending for current period
+  categories.forEach(category => {
+    // Only include expenses
+    if (category.type !== 'income') {
+      category.subHeaders.forEach(subHeader => {
+        // Calculate spending based on YTD or single month
+        if (isYTD) {
+          for (let i = 0; i <= monthIndex; i++) {
+            const month = MONTHS[i];
+            const amount = Math.abs((subHeader.budgetValues?.[month] !== undefined
+              ? subHeader.budgetValues[month]
+              : subHeader.monthlyamounts?.[month]) || 0);
+            totalSpending += amount;
+          }
+          
+          // Calculate previous period (YTD through previous month)
+          if (monthIndex > 0) {
+            for (let i = 0; i < monthIndex; i++) {
+              const month = MONTHS[i];
+              const amount = Math.abs((subHeader.budgetValues?.[month] !== undefined
+                ? subHeader.budgetValues[month]
+                : subHeader.monthlyamounts?.[month]) || 0);
+              previousSpending += amount;
+            }
+          }
+        } else {
+          // Single month mode
+          const amount = Math.abs((subHeader.budgetValues?.[currentMonth] !== undefined
+            ? subHeader.budgetValues[currentMonth]
+            : subHeader.monthlyamounts?.[currentMonth]) || 0);
+          totalSpending += amount;
+          
+          // Previous month
+          const prevAmount = Math.abs((subHeader.budgetValues?.[previousMonth] !== undefined
+            ? subHeader.budgetValues[previousMonth]
+            : subHeader.monthlyamounts?.[previousMonth]) || 0);
+          previousSpending += prevAmount;
+        }
+      });
+    }
+  });
+  
+  // Calculate spending percentage difference
+  const spendingDiff = totalSpending - previousSpending;
+  const spendingDiffPercentage = previousSpending !== 0 
+    ? Math.round((spendingDiff / previousSpending) * 100)
+    : 0;
+  
+  // ----- BUDGET ADHERENCE CALCULATION -----
+  let totalBudgeted = 0;
+  let totalDeviation = 0;
+  let previousBudgeted = 0;
+  let previousDeviation = 0;
+  
+  // Calculate budget adherence for current period
+  categories.forEach(category => {
+    if (category.type !== 'income') {
+      category.subHeaders.forEach(subHeader => {
+        // Process for YTD or single month
+        if (isYTD) {
+          let currentBudgeted = 0;
+          let currentActual = 0;
+          let prevBudgeted = 0;
+          let prevActual = 0;
+          
+          // Current YTD totals
+          for (let i = 0; i <= monthIndex; i++) {
+            const month = MONTHS[i];
+            const budgeted = Math.abs(subHeader.monthlyamounts?.[month] || 0);
+            const actual = Math.abs((subHeader.budgetValues?.[month] !== undefined
+              ? subHeader.budgetValues[month]
+              : subHeader.monthlyamounts?.[month]) || 0);
+            
+            currentBudgeted += budgeted;
+            currentActual += actual;
+            
+            // Also calculate previous period (through previous month)
+            if (i < monthIndex) {
+              prevBudgeted += budgeted;
+              prevActual += actual;
+            }
+          }
+          
+          // Add to totals
+          totalBudgeted += currentBudgeted;
+          previousBudgeted += prevBudgeted;
+          
+          // Calculate deviation (absolute difference)
+          if (currentBudgeted > 0) {
+            totalDeviation += Math.abs(currentActual - currentBudgeted);
+          }
+          
+          if (prevBudgeted > 0) {
+            previousDeviation += Math.abs(prevActual - prevBudgeted);
+          }
+        } else {
+          // Single month
+          const budgeted = Math.abs(subHeader.monthlyamounts?.[currentMonth] || 0);
+          const actual = Math.abs((subHeader.budgetValues?.[currentMonth] !== undefined
+            ? subHeader.budgetValues[currentMonth]
+            : subHeader.monthlyamounts?.[currentMonth]) || 0);
+          
+          const prevBudgeted = Math.abs(subHeader.monthlyamounts?.[previousMonth] || 0);
+          const prevActual = Math.abs((subHeader.budgetValues?.[previousMonth] !== undefined
+            ? subHeader.budgetValues[previousMonth]
+            : subHeader.monthlyamounts?.[previousMonth]) || 0);
+          
+          // Add to totals
+          totalBudgeted += budgeted;
+          previousBudgeted += prevBudgeted;
+          
+          // Calculate deviation (absolute difference)
+          if (budgeted > 0) {
+            totalDeviation += Math.abs(actual - budgeted);
+          }
+          
+          if (prevBudgeted > 0) {
+            previousDeviation += Math.abs(prevActual - prevBudgeted);
+          }
+        }
+      });
+    }
+  });
+  
+  // Calculate budget adherence percentage
+  const budgetAdherence = totalBudgeted > 0
+    ? Math.round(100 - ((totalDeviation / totalBudgeted) * 100))
+    : 100;
+  
+  const previousAdherence = previousBudgeted > 0
+    ? Math.round(100 - ((previousDeviation / previousBudgeted) * 100))
+    : 100;
+  
+  const adherenceDiff = budgetAdherence - previousAdherence;
+  
+  // ----- ALERT CATEGORIES CALCULATION -----
+  const alertCategories = [];
+  
+  // Find categories with significant deviation
+  categories.forEach(category => {
+    if (category.type !== 'income') {
+      let categoryHasSignificantDeviation = false;
+      
+      category.subHeaders.forEach(subHeader => {
+        // Calculate budget and actual for this subheader
+        let subHeaderBudgeted = 0;
+        let subHeaderActual = 0;
+        
+        if (isYTD) {
+          // YTD totals
+          for (let i = 0; i <= monthIndex; i++) {
+            const month = MONTHS[i];
+            const budgeted = Math.abs(subHeader.monthlyamounts?.[month] || 0);
+            const actual = Math.abs((subHeader.budgetValues?.[month] !== undefined
+              ? subHeader.budgetValues[month]
+              : subHeader.monthlyamounts?.[month]) || 0);
+            
+            subHeaderBudgeted += budgeted;
+            subHeaderActual += actual;
+          }
+        } else {
+          // Single month
+          subHeaderBudgeted = Math.abs(subHeader.monthlyamounts?.[currentMonth] || 0);
+          subHeaderActual = Math.abs((subHeader.budgetValues?.[currentMonth] !== undefined
+            ? subHeader.budgetValues[currentMonth]
+            : subHeader.monthlyamounts?.[currentMonth]) || 0);
+        }
+        
+        // Check for significant deviation (>10%)
+        if (subHeaderBudgeted > 0) {
+          const deviation = Math.abs(subHeaderActual - subHeaderBudgeted);
+          const deviationPercent = (deviation / subHeaderBudgeted) * 100;
+          
+          if (deviationPercent > 10) {
+            categoryHasSignificantDeviation = true;
+          }
+        }
+      });
+      
+      // If any subheader has significant deviation, add category to alerts
+      if (categoryHasSignificantDeviation && !alertCategories.some(c => c.id === category.id)) {
+        alertCategories.push(category);
+      }
+    }
+  });
+  
+  // Send debug info to parent
+  if (onDebugUpdate) {
+    onDebugUpdate({
+      selectedMonth: selectedMonth || 'system date',
+      isYTD,
+      categoriesCount: categories.length,
+      budgetAdherence,
+      alertCategories: alertCategories.length,
+      alertCategoryNames: alertCategories.map(c => c.name)
+    });
+  }
+  
+  // Log detailed debug info
+  console.log("SimpleBudgetMetricCards calculation results:", {
+    totalSpending,
+    previousSpending,
+    spendingDiffPercentage,
+    totalBudgeted,
+    totalDeviation,
+    budgetAdherence,
+    previousAdherence,
+    adherenceDiff,
+    alertCategoriesCount: alertCategories.length,
+    alertCategoryNames: alertCategories.map(c => c.name)
+  });
+  
+  // Format currency
+  const formatCurrency = (value: number) => {
+    return new Intl.NumberFormat('sv-SE', {
+      style: 'currency',
+      currency: 'SEK',
+      maximumFractionDigits: 0
+    }).format(value);
+  };
+  
+  return (
+    <div className="grid gap-4 grid-cols-1 md:grid-cols-3 mb-8" style={{ marginBottom: '2rem' }}>
+      {/* Total Spending Card */}
+      <Card className="metric-card">
+        <CardHeader className="flex flex-row items-center justify-between pb-2">
+          <CardTitle className="text-sm font-medium">Total Spending</CardTitle>
+          <div className="p-2 bg-muted rounded-md">
+            <BarChart className="h-5 w-5 metric-icon" />
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="metric-value">{formatCurrency(totalSpending)}</div>
+          <div className="metric-change">
+            <div className={spendingDiffPercentage > 0 ? "text-xs metric-change-negative" : spendingDiffPercentage < 0 ? "text-xs metric-change-positive" : "text-xs text-muted-foreground"}>
+              {spendingDiffPercentage !== 0 ? (
+                <span>
+                  {spendingDiffPercentage > 0 ? '↑' : '↓'} {Math.abs(spendingDiffPercentage)}% from last month
+                </span>
+              ) : (
+                <span>0% from last month</span>
+              )}
+            </div>
+          </div>
+          {/* Debug info */}
+          {process.env.NODE_ENV === 'development' && (
+            <div className="text-[10px] text-gray-400 mt-4">
+              Debug: total={totalSpending.toFixed(2)}, prev={previousSpending.toFixed(2)}, diff={spendingDiffPercentage}%
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Budget Adherence Card */}
+      <Card className="metric-card">
+        <CardHeader className="flex flex-row items-center justify-between pb-2">
+          <CardTitle className="text-sm font-medium">Budget Adherence</CardTitle>
+          <div className="p-2 bg-muted rounded-md">
+            <TrendingUp className="h-5 w-5 metric-icon" />
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="metric-value">{budgetAdherence}%</div>
+          <div className="metric-change">
+            {/* Show appropriate indicator based on whether adherence improved or declined */}
+            {adherenceDiff === 0 ? (
+              <div className="text-xs text-muted-foreground">
+                <span>No change</span>
+              </div>
+            ) : adherenceDiff > 0 ? (
+              <div className="text-xs metric-change-positive">
+                <span>↑ {Math.abs(adherenceDiff)}% improvement</span>
+              </div>
+            ) : (
+              <div className="text-xs metric-change-negative">
+                <span>↓ {Math.abs(adherenceDiff)}% decline</span>
+              </div>
+            )}
+          </div>
+          {/* Debug info */}
+          {process.env.NODE_ENV === 'development' && (
+            <div className="text-[10px] text-gray-400 mt-4">
+              Debug: adhere={budgetAdherence.toFixed(2)}%, prev={previousAdherence.toFixed(2)}%, diff={adherenceDiff}%
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Alert Categories Card */}
+      <Card className="metric-card">
+        <CardHeader className="flex flex-row items-center justify-between pb-2">
+          <CardTitle className="text-sm font-medium">Alert Categories</CardTitle>
+          <div className="p-2 bg-muted rounded-md">
+            <AlertTriangle className="h-5 w-5 metric-icon" />
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="metric-value">{alertCategories.length} Categories</div>
+          <div className="metric-change">
+            {alertCategories.length > 0 ? (
+              <div className="text-xs metric-change-negative">
+                <span>↓ Significant budget deviation</span>
+              </div>
+            ) : (
+              <div className="text-xs metric-change-positive">
+                <span>All categories on budget</span>
+              </div>
+            )}
+          </div>
+          {/* Debug info */}
+          {process.env.NODE_ENV === 'development' && (
+            <div className="text-[10px] text-gray-400 mt-4">
+              Debug: alerts={alertCategories.length}, names=[{alertCategories.slice(0, 2).map(c => c.name).join(', ')}{alertCategories.length > 2 ? '...' : ''}]
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+export default SimpleBudgetMetricCards;

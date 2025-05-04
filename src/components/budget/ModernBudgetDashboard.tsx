@@ -3,6 +3,9 @@ import React, { useState, useEffect } from 'react';
 import { ModernBudgetSummary } from './ModernBudgetSummary';
 import type { BudgetCategory } from '@/types/budget';
 import { getBudgetData } from '@/lib/budgetService';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+// Removed BudgetMetricCards import as these should only appear in Budget Analysis
+import './dashboard/dashboard-cards.css';
 
 interface ModernBudgetDashboardProps {
   year: number;
@@ -22,7 +25,7 @@ export function ModernBudgetDashboard({ year }: ModernBudgetDashboardProps) {
       const enrichedCategories = await getBudgetData();
       setCategories(enrichedCategories);
     } catch (error) {
-      console.error('Error loading categories:', error);
+      // Error handled silently
     } finally {
       setLoading(false);
     }
@@ -31,11 +34,25 @@ export function ModernBudgetDashboard({ year }: ModernBudgetDashboardProps) {
   return (
     <div className="container mx-auto p-6">
       {loading ? (
-        <div className="flex justify-center items-center h-64">
-          <p>Loading budget data...</p>
-        </div>
+        <Card>
+          <CardContent className="flex justify-center items-center h-64">
+            <p>Loading budget data...</p>
+          </CardContent>
+        </Card>
       ) : (
-        <ModernBudgetSummary categories={categories} year={year} />
+        <>
+          {/* Budget Metric Cards removed - should only appear in Budget Analysis */}
+          
+          {/* Budget Summary Table */}
+          <Card className="budget-summary-card">
+            <CardHeader>
+              <CardTitle>Budget Dashboard {year}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ModernBudgetSummary categories={categories} year={year} />
+            </CardContent>
+          </Card>
+        </>
       )}
     </div>
   );

@@ -231,7 +231,7 @@ export function PersonAnalysis({ year }: PersonAnalysisProps) {
   
       setCategories(processedCategories);
     } catch (error) {
-      console.error('Error loading data:', error);
+      // Error handled silently
     } finally {
       setLoading(false);
     }

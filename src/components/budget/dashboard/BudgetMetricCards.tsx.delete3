@@ -1,0 +1,594 @@
+// BACKUP OF ORIGINAL BudgetMetricCards.tsx
+// Keep this file as a backup in case the new implementation needs to be reverted
+
+import React, { useEffect } from 'react';
+import './dashboard-cards.css';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { BudgetCategory } from '@/types/budget';
+import { FULL_MONTHS } from '@/types/budget';
+import { ArrowUp, ArrowDown, AlertTriangle, BarChart, ArrowUpRight, TrendingUp } from 'lucide-react';
+
+interface BudgetMetricCardsProps {
+  categories: BudgetCategory[];
+  year: number;
+  selectedMonth?: string;
+  isYTD?: boolean;
+  previousPeriodData?: {
+    totalSpending: number;
+    budgetAdherence: number;
+  };
+  onDebugUpdate?: (debugInfo: any) => void;
+}
+
+// Standard 3-letter month abbreviations lowercase (to match the data structure)
+const MONTHS = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+
+// Current month (0-indexed)
+const getCurrentMonth = () => {
+  const now = new Date();
+  return now.getMonth();
+};
+
+export function BudgetMetricCards({ categories, year, selectedMonth, isYTD = false, previousPeriodData, onDebugUpdate }: BudgetMetricCardsProps) {
+  // Determine which month to use (use selected month or current month as fallback)
+  const currentDate = new Date();
+  const systemMonthIndex = currentDate.getMonth();
+
+  // Get the month index from selectedMonth or use system month
+  const selectedMonthIndex = selectedMonth 
+    ? FULL_MONTHS.findIndex(m => m.toLowerCase() === selectedMonth.toLowerCase())
+    : systemMonthIndex;
+  
+  // If selectedMonth is valid, use it; otherwise fallback to system month
+  const monthIndex = selectedMonthIndex >= 0 ? selectedMonthIndex : systemMonthIndex;
+  
+  // Get the 3-letter month abbreviation in lowercase for data lookups
+  const currentMonth = MONTHS[monthIndex];
+  const previousMonth = monthIndex > 0 ? MONTHS[monthIndex - 1] : MONTHS[11];
+  
+  // Log initial parameters
+  console.log('BudgetMetricCards initialized with:', {
+    year,
+    selectedMonth,
+    isYTD,
+    monthIndex,
+    currentMonth,
+    previousMonth,
+    categoriesCount: categories.length,
+  });
+
+  // Debug each category
+  console.log('Categories data structure:', categories.map(cat => ({
+    id: cat.id,
+    name: cat.name,
+    type: cat.type,
+    subHeadersCount: cat.subHeaders.length,
+    subHeaderExample: cat.subHeaders.length > 0 ? {
+      id: cat.subHeaders[0].id,
+      name: cat.subHeaders[0].name,
+      monthlyamounts: cat.subHeaders[0].monthlyamounts,
+      budgetValues: cat.subHeaders[0].budgetValues
+    } : 'No subheaders'
+  })));
+
+  // Calculate total spending (sum of fixed, variable, extraordinary costs) for current month
+  const calculateTotalSpending = () => {
+    let total = 0;
+    const debug = [];
+    
+    categories.forEach(category => {
+      // Only include expense categories (fixed, variable, extraordinary)
+      if (category.type !== 'income') {
+        let categoryTotal = 0;
+        const categoryDebug = [];
+        
+        category.subHeaders.forEach(subHeader => {
+          // If YTD mode is on, calculate YTD totals
+          if (isYTD) {
+            // Calculate sum for all months up to currentMonth
+            let subHeaderTotal = 0;
+            for (let i = 0; i <= monthIndex; i++) {
+              const month = MONTHS[i];
+              const amount = (subHeader.budgetValues?.[month] !== undefined
+                ? subHeader.budgetValues[month]
+                : subHeader.monthlyamounts?.[month]) || 0;
+              
+              // Costs are stored as negative values, so we take the absolute value
+              subHeaderTotal += Math.abs(amount);
+            }
+            categoryTotal += subHeaderTotal;
+            categoryDebug.push({
+              subHeaderId: subHeader.id, 
+              name: subHeader.name,
+              total: subHeaderTotal
+            });
+          } else {
+            // Just use the current month
+            const amount = (subHeader.budgetValues?.[currentMonth] !== undefined
+              ? subHeader.budgetValues[currentMonth]
+              : subHeader.monthlyamounts?.[currentMonth]) || 0;
+            
+            // Costs are stored as negative values, so we take the absolute value
+            categoryTotal += Math.abs(amount);
+            categoryDebug.push({
+              subHeaderId: subHeader.id, 
+              name: subHeader.name,
+              amount,
+              absAmount: Math.abs(amount),
+              source: subHeader.budgetValues?.[currentMonth] !== undefined ? 'budgetValues' : 'monthlyamounts'
+            });
+          }
+        });
+        
+        total += categoryTotal;
+        debug.push({
+          categoryId: category.id,
+          categoryName: category.name,
+          categoryType: category.type,
+          total: categoryTotal,
+          subHeaders: categoryDebug
+        });
+      }
+    });
+    
+    console.log('Total spending calculation:', {
+      total,
+      isYTD,
+      currentMonth, 
+      categoryBreakdown: debug
+    });
+    
+    return total;
+  };
+
+  // Calculate total spending for previous month
+  const calculatePreviousPeriodSpending = () => {
+    // If we have previous period data provided, use that
+    if (previousPeriodData?.totalSpending) {
+      return previousPeriodData.totalSpending;
+    }
+    
+    // Otherwise calculate from categories
+    let total = 0;
+    
+    // For YTD, previous period is previous month YTD
+    const prevMonthIndex = isYTD ? monthIndex - 1 : monthIndex;
+    
+    categories.forEach(category => {
+      if (category.type !== 'income') {
+        category.subHeaders.forEach(subHeader => {
+          // YTD mode: sum up to previous month
+          if (isYTD && prevMonthIndex >= 0) {
+            for (let i = 0; i <= prevMonthIndex; i++) {
+              const month = MONTHS[i];
+              const amount = (subHeader.budgetValues?.[month] !== undefined
+                ? subHeader.budgetValues[month]
+                : subHeader.monthlyamounts?.[month]) || 0;
+              
+              total += Math.abs(amount);
+            }
+          } else {
+            // Just previous month
+            const amount = (subHeader.budgetValues?.[previousMonth] !== undefined
+              ? subHeader.budgetValues[previousMonth]
+              : subHeader.monthlyamounts?.[previousMonth]) || 0;
+            
+            total += Math.abs(amount);
+          }
+        });
+      }
+    });
+    
+    return total;
+  };
+
+  // Calculate budget adherence - how close actual spending is to budget
+  // Lower values represent poor adherence (going over budget)
+  const calculateBudgetAdherence = () => {
+    let totalBudgeted = 0;
+    let totalActual = 0;
+    const debug = [];
+    let overBudgetAmount = 0;
+    
+    // For each expense category
+    categories.forEach(category => {
+      if (category.type !== 'income') {
+        category.subHeaders.forEach(subHeader => {
+          if (isYTD) {
+            // YTD mode: sum up to current month
+            let subHeaderBudgeted = 0;
+            let subHeaderActual = 0;
+            
+            for (let i = 0; i <= monthIndex; i++) {
+              const month = MONTHS[i];
+              const budgeted = Math.abs(subHeader.monthlyamounts?.[month] || 0);
+              const actual = Math.abs((subHeader.budgetValues?.[month] !== undefined
+                ? subHeader.budgetValues[month]
+                : subHeader.monthlyamounts?.[month]) || 0);
+              
+              subHeaderBudgeted += budgeted;
+              subHeaderActual += actual;
+            }
+            
+            totalBudgeted += subHeaderBudgeted;
+            totalActual += subHeaderActual;
+            
+            // Only count as over budget if YTD actual exceeds YTD budget
+            if (subHeaderActual > subHeaderBudgeted && subHeaderBudgeted > 0) {
+              overBudgetAmount += (subHeaderActual - subHeaderBudgeted);
+              debug.push({
+                categoryName: category.name,
+                subHeaderName: subHeader.name,
+                budgeted: subHeaderBudgeted,
+                actual: subHeaderActual,
+                over: subHeaderActual - subHeaderBudgeted,
+                percentOver: ((subHeaderActual - subHeaderBudgeted) / subHeaderBudgeted) * 100
+              });
+            }
+          } else {
+            // Single month mode
+            const budgeted = Math.abs(subHeader.monthlyamounts?.[currentMonth] || 0);
+            const actual = Math.abs((subHeader.budgetValues?.[currentMonth] !== undefined
+              ? subHeader.budgetValues[currentMonth]
+              : subHeader.monthlyamounts?.[currentMonth]) || 0);
+            
+            totalBudgeted += budgeted;
+            totalActual += actual;
+            
+            // Track each subheader that's over budget
+            if (actual > budgeted && budgeted > 0) {
+              overBudgetAmount += (actual - budgeted);
+              debug.push({
+                categoryName: category.name,
+                subHeaderName: subHeader.name,
+                budgeted,
+                actual,
+                over: actual - budgeted,
+                percentOver: ((actual - budgeted) / budgeted) * 100
+              });
+            }
+          }
+        });
+      }
+    });
+    
+    // If nothing budgeted, return 100%
+    if (totalBudgeted === 0) {
+      console.log('Budget adherence: No budget set, returning 100%');
+      return 100;
+    }
+    
+    // Calculate adherence percentage
+    // Formula: 100 - (overBudgetAmount / totalBudgeted * 100)
+    // This gives us a percentage where:
+    // - 100% means perfect adherence (nothing over budget)
+    // - 0% would mean spending double the budget
+    const adherencePercentage = Math.max(0, 100 - (overBudgetAmount / totalBudgeted * 100));
+    
+    console.log('Budget adherence calculation (improved):', {
+      totalBudgeted,
+      totalActual,
+      overBudgetAmount,
+      isYTD,
+      currentMonth,
+      adherencePercentage,
+      itemsOverBudget: debug.length,
+      debugDetails: debug
+    });
+    
+    return Math.round(adherencePercentage);
+  };
+
+  // Calculate previous month's budget adherence
+  const calculatePreviousBudgetAdherence = () => {
+    // If we have previous period data provided, use that
+    if (previousPeriodData?.budgetAdherence) {
+      return previousPeriodData.budgetAdherence;
+    }
+    
+    // Otherwise calculate from categories
+    let totalBudgeted = 0;
+    let totalActual = 0;
+    let overBudgetAmount = 0;
+    
+    // For each expense category
+    categories.forEach(category => {
+      if (category.type !== 'income') {
+        category.subHeaders.forEach(subHeader => {
+          // Get the previous month's values only
+          const budgeted = Math.abs(subHeader.monthlyamounts?.[previousMonth] || 0);
+          const actual = Math.abs((subHeader.budgetValues?.[previousMonth] !== undefined
+            ? subHeader.budgetValues[previousMonth]
+            : subHeader.monthlyamounts?.[previousMonth]) || 0);
+          
+          totalBudgeted += budgeted;
+          totalActual += actual;
+          
+          // Track each subheader that's over budget
+          if (actual > budgeted && budgeted > 0) {
+            overBudgetAmount += (actual - budgeted);
+          }
+        });
+      }
+    });
+    
+    // If nothing budgeted, return 100%
+    if (totalBudgeted === 0) {
+      return 100;
+    }
+    
+    // Use the same formula as the current month calculation
+    const adherencePercentage = Math.max(0, 100 - (overBudgetAmount / totalBudgeted * 100));
+    
+    console.log('Previous budget adherence calculation:', {
+      totalBudgeted,
+      totalActual,
+      overBudgetAmount,
+      previousMonth,
+      adherencePercentage
+    });
+    
+    return Math.round(adherencePercentage);
+  };
+
+  // Find categories that are over budget by more than 10%
+  const findAlertCategories = () => {
+    const alertCategories = [];
+    const debug = [];
+    
+    // First, check at the subheader level (like Medical, Retail, etc.)
+    categories.forEach(category => {
+      // Skip income
+      if (category.type === 'income') return;
+      
+      // Process each subheader individually
+      category.subHeaders.forEach(subHeader => {
+        if (isYTD) {
+          // YTD mode: sum up to current month
+          let subHeaderBudgeted = 0;
+          let subHeaderActual = 0;
+          
+          for (let i = 0; i <= monthIndex; i++) {
+            const month = MONTHS[i];
+            const budgeted = Math.abs(subHeader.monthlyamounts?.[month] || 0);
+            const actual = Math.abs((subHeader.budgetValues?.[month] !== undefined
+              ? subHeader.budgetValues[month]
+              : subHeader.monthlyamounts?.[month]) || 0);
+            
+            subHeaderBudgeted += budgeted;
+            subHeaderActual += actual;
+          }
+          
+          // Skip if no budget set
+          if (subHeaderBudgeted === 0) return;
+          
+          // Calculate percentage over budget for YTD
+          const percentOver = ((subHeaderActual - subHeaderBudgeted) / subHeaderBudgeted) * 100;
+          
+          debug.push({
+            categoryName: category.name,
+            subHeaderName: subHeader.name,
+            budgeted: subHeaderBudgeted,
+            actual: subHeaderActual,
+            percentOver,
+            isYTD: true
+          });
+          
+          // Check if over budget by 10% or more
+          if (percentOver > 10) {
+            // Only add the parent category once
+            if (!alertCategories.some(cat => cat.id === category.id)) {
+              alertCategories.push(category);
+            }
+          }
+        } else {
+          // Single month mode
+          const month = currentMonth;
+          const budgeted = Math.abs(subHeader.monthlyamounts?.[month] || 0);
+          const actual = Math.abs((subHeader.budgetValues?.[month] !== undefined
+            ? subHeader.budgetValues[month]
+            : subHeader.monthlyamounts?.[month]) || 0);
+          
+          // Skip if no budget set
+          if (budgeted === 0) return;
+          
+          // Calculate percentage over budget
+          const percentOver = ((actual - budgeted) / budgeted) * 100;
+          
+          debug.push({
+            categoryName: category.name,
+            subHeaderName: subHeader.name,
+            budgeted,
+            actual,
+            percentOver,
+            isYTD: false
+          });
+          
+          // Check if over budget by 10% or more
+          if (percentOver > 10) {
+            // Only add the parent category once
+            if (!alertCategories.some(cat => cat.id === category.id)) {
+              alertCategories.push(category);
+            }
+          }
+        }
+      });
+    });
+    
+    console.log('Alert categories calculation (subheader level):', {
+      alertCategoriesCount: alertCategories.length,
+      alertCategoriesNames: alertCategories.map(c => c.name),
+      isYTD,
+      currentMonth,
+      monthIndex,
+      categoryBreakdown: debug
+    });
+    
+    return alertCategories;
+  };
+
+  // Calculate metrics
+  const totalSpending = calculateTotalSpending();
+  const previousSpending = calculatePreviousPeriodSpending();
+  const spendingDiff = totalSpending - previousSpending;
+  const spendingDiffPercentage = previousSpending > 0 
+    ? Math.round((spendingDiff / previousSpending) * 100) 
+    : 0;
+  
+  // For spending, an increase is considered negative (costs going up)
+  const spendingChangeIsNegative = spendingDiffPercentage > 0;
+  
+  // Get the adherence percentage (100% means within budget)
+  const budgetAdherence = Math.round(calculateBudgetAdherence());
+  const previousAdherence = Math.round(calculatePreviousBudgetAdherence());
+  const adherenceDiff = budgetAdherence - previousAdherence;
+  
+  // For adherence, an increase is considered positive (sticking closer to budget)
+  const adherenceChangeIsPositive = adherenceDiff > 0;
+  
+  // Find categories that are over budget by 10% or more
+  const alertCategories = findAlertCategories();
+
+
+  // Log calculations for debugging and report to parent
+  console.log('Metrics calculated:', {
+    totalSpending,
+    previousSpending,
+    spendingDiff,
+    spendingDiffPercentage,
+    budgetAdherence,
+    previousAdherence,
+    adherenceDiff,
+    alertCategories: alertCategories.length
+  });
+  
+  // Send debug info to parent if callback provided
+  if (onDebugUpdate) {
+    onDebugUpdate({
+      selectedMonth: selectedMonth || 'system date',
+      isYTD,
+      categoriesCount: categories.length,
+      budgetAdherence,
+      alertCategories: alertCategories.length,
+      alertCategoryNames: alertCategories.map(c => c.name)
+    });
+  }
+  
+  // Force re-calculation when props change
+  useEffect(() => {
+    console.log(`BudgetMetricCards: Effect triggered with ${selectedMonth}, YTD=${isYTD}`);
+    // Note: We don't need to do anything here because the component will automatically
+    // re-render and recalculate values when props change
+  }, [selectedMonth, isYTD]);
+
+
+  // Format currency
+  const formatCurrency = (value: number) => {
+    return new Intl.NumberFormat('sv-SE', {
+      style: 'currency',
+      currency: 'SEK',
+      maximumFractionDigits: 0
+    }).format(value);
+  };
+
+  return (
+    <div className="grid gap-4 grid-cols-1 md:grid-cols-3 mb-8" style={{ marginBottom: '2rem' }}>
+      {/* Total Spending Card */}
+      <Card className="metric-card">
+        <CardHeader className="flex flex-row items-center justify-between pb-2">
+          <CardTitle className="text-sm font-medium">Total Spending</CardTitle>
+          <div className="p-2 bg-muted rounded-md">
+            <BarChart className="h-5 w-5 metric-icon" />
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="metric-value">{formatCurrency(totalSpending)}</div>
+          <div className="metric-change">
+            <div className={spendingChangeIsNegative ? "text-xs metric-change-negative" : spendingDiffPercentage < 0 ? "text-xs metric-change-positive" : "text-xs text-muted-foreground"}>
+              {spendingDiffPercentage !== 0 ? (
+                <span>
+                  {spendingChangeIsNegative ? '↑' : '↓'} {Math.abs(spendingDiffPercentage)}% from last month
+                </span>
+              ) : (
+                <span>0% from last month</span>
+              )}
+            </div>
+          </div>
+          {/* Debug info */}
+          {process.env.NODE_ENV === 'development' && (
+            <div className="text-[10px] text-gray-400 mt-4">
+              Debug: total={totalSpending.toFixed(2)}, prev={previousSpending.toFixed(2)}, diff={spendingDiffPercentage}%
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Budget Adherence Card */}
+      <Card className="metric-card">
+        <CardHeader className="flex flex-row items-center justify-between pb-2">
+          <CardTitle className="text-sm font-medium">Budget Adherence</CardTitle>
+          <div className="p-2 bg-muted rounded-md">
+            <TrendingUp className="h-5 w-5 metric-icon" />
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="metric-value">{budgetAdherence}%</div>
+          <div className="metric-change">
+            {/* Show appropriate indicator based on whether adherence improved or declined */}
+            {adherenceDiff === 0 ? (
+              <div className="text-xs text-muted-foreground">
+                <span>No change</span>
+              </div>
+            ) : adherenceDiff > 0 ? (
+              <div className="text-xs metric-change-positive">
+                <span>↑ {Math.abs(adherenceDiff)}% improvement</span>
+              </div>
+            ) : (
+              <div className="text-xs metric-change-negative">
+                <span>↓ {Math.abs(adherenceDiff)}% decline</span>
+              </div>
+            )}
+          </div>
+          {/* Debug info */}
+          {process.env.NODE_ENV === 'development' && (
+            <div className="text-[10px] text-gray-400 mt-4">
+              Debug: adhere={budgetAdherence.toFixed(2)}%, prev={previousAdherence.toFixed(2)}%, diff={adherenceDiff}%
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Alert Categories Card */}
+      <Card className="metric-card">
+        <CardHeader className="flex flex-row items-center justify-between pb-2">
+          <CardTitle className="text-sm font-medium">Alert Categories</CardTitle>
+          <div className="p-2 bg-muted rounded-md">
+            <AlertTriangle className="h-5 w-5 metric-icon" />
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="metric-value">{alertCategories.length} Categories</div>
+          <div className="metric-change">
+            {alertCategories.length > 0 ? (
+              <div className="text-xs metric-change-negative">
+                <span>↓ Over budget</span>
+              </div>
+            ) : (
+              <div className="text-xs metric-change-positive">
+                <span>All categories on budget</span>
+              </div>
+            )}
+          </div>
+          {/* Debug info */}
+          {process.env.NODE_ENV === 'development' && (
+            <div className="text-[10px] text-gray-400 mt-4">
+              Debug: alerts={alertCategories.length}, names=[{alertCategories.slice(0, 2).map(c => c.name).join(', ')}{alertCategories.length > 2 ? '...' : ''}]
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+export default BudgetMetricCards;

@@ -1,0 +1,59 @@
+import React from 'react';
+import './dashboard-cards.css';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { BudgetCategory } from '@/types/budget';
+import { FULL_MONTHS } from '@/types/budget';
+import { AlertTriangle, BarChart, TrendingUp } from 'lucide-react';
+
+interface BasicMetricCardsProps {
+  categories: BudgetCategory[];
+  year: number;
+  selectedMonth?: string;
+  isYTD?: boolean;
+  onDebugUpdate?: (debugInfo: any) => void;
+}
+
+export function BasicMetricCards({ 
+  categories, 
+  year, 
+  selectedMonth, 
+  isYTD = false,
+  onDebugUpdate 
+}: BasicMetricCardsProps) {
+  // Month abbreviations
+  const MONTHS = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+  
+  // Get current month index
+  const currentDate = new Date();
+  const systemMonthIndex = currentDate.getMonth();
+  const selectedMonthIndex = selectedMonth 
+    ? FULL_MONTHS.findIndex(m => m.toLowerCase() === selectedMonth.toLowerCase())
+    : systemMonthIndex;
+  const monthIndex = selectedMonthIndex >= 0 ? selectedMonthIndex : systemMonthIndex;
+  const currentMonth = MONTHS[monthIndex];
+  
+  // Calculate total spending
+  let totalSpending = 0;
+  
+  // Find alert categories and calculate budget adherence
+  const alertCategories = [];
+  let totalBudgeted = 0;
+  let totalDeviation = 0;
+  
+  // Process all categories
+  categories.forEach(category => {
+    if (category.type !== 'income') {
+      let categoryHasAlert = false;
+      
+      category.subHeaders.forEach(subHeader => {
+        // Calculate budget and actual for the selected month
+        const budgeted = Math.abs(subHeader.monthlyamounts?.[currentMonth] || 0);
+        const actual = Math.abs((subHeader.budgetValues?.[currentMonth] !== undefined
+          ? subHeader.budgetValues[currentMonth]
+          : subHeader.monthlyamounts?.[currentMonth]) || 0);
+        
+        // Add to total spending
+        totalSpending += actual;
+        
+        // Budget adherence calculation
+        if (budgeted > 0) {

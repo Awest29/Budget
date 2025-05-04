@@ -15,6 +15,7 @@
 @import './components/budget/extreme-compact.css'; /* Ultra-compact styling */
 @import './components/budget/hover-icons.css'; /* Show icons only on hover */
 @import './components/budget/alternating-rows.css'; /* Alternating row colors */
+@import './components/budget/dashboard/dashboard-cards.css'; /* Dashboard metric cards */
 
 /* Background styling */
 body {

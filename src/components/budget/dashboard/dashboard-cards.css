@@ -1,0 +1,37 @@
+/* Dashboard metric cards styling */
+.metric-card {
+  background-color: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.metric-value {
+  font-size: 2.25rem; /* Matches the screenshot better */
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 0.5rem;
+}
+
+.metric-change {
+  display: flex;
+  align-items: center;
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+
+.metric-change-positive {
+  color: #22c55e; /* green-500 - matches screenshot */
+}
+
+.metric-change-negative {
+  color: #ef4444; /* red-500 - matches screenshot */
+}
+
+.metric-icon {
+  color: #64748b; /* slate-500 - more accurate to screenshot */
+}
+
+.bg-muted {
+  background-color: #f1f5f9; /* slate-100 - light gray background for icons */
+}

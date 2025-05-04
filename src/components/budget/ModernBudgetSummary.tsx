@@ -526,16 +526,13 @@ export function ModernBudgetSummary({ categories: initialCategories, year }: Mod
   };
 
   return (
-    <div className="budget-summary-card">
-      <div className="card-header">
-        <h2 className="card-title">Budget Summary {year}</h2>
-        <p className="card-subtitle">Overview of your budget across all categories</p>
+    <div>
+      <div className="mb-4">
+        <p className="text-secondary">Overview of your budget across all categories</p>
       </div>
       
-      <div className="card-content" style={{ padding: '0.5rem' }}>
-        <div 
-          className="table-container" 
-        >
+      <div>
+        <div className="table-container overflow-x-auto border rounded-lg">
           <table className="budget-table budget-summary-table">
             <thead>
               <tr className="category-type-row">
@@ -1223,7 +1220,7 @@ export function ModernBudgetSummary({ categories: initialCategories, year }: Mod
         </div>
         
         {/* Add new category form */}
-        <div style={{ marginTop: '20px' }}>
+        <div className="mt-6">
           {addingCategory ? (
             <div className="add-form" style={{ maxWidth: '500px' }}>
               <input
@@ -1262,7 +1259,7 @@ export function ModernBudgetSummary({ categories: initialCategories, year }: Mod
 
       {/* Simplified Edit Dialog */}
       <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
-        <DialogContent className="sm:max-w-[425px] bg-white dialog-edit-content" style={{ position: 'fixed', zIndex: 9999 }}>
+        <DialogContent className="sm:max-w-[425px] bg-card">
           <DialogHeader>
             <DialogTitle>Edit Item</DialogTitle>
           </DialogHeader>
